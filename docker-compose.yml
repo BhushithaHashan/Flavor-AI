@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  nginx:
+    image: nginx:stable
+    ports:
+      - '8080:80'
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: devdb # default DB
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./deploy/postgres/init:/docker-entrypoint-initdb.d
+     
+
+  redis:
+    image: redis:7
+
+  auth-service:
+    build: ./services/auth-service/auth-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
+      SPRING_DATASOURCE_USERNAME: dev
+      SPRING_DATASOURCE_PASSWORD: dev
+      SPRING_REDIS_HOST: redis
+      JWT_SECRET: my_super_secret_key_here
+    depends_on:
+      - postgres
+      - redis
+
+  # user-service:
+  #   build: ./services/user-service
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userdb
+  #     SPRING_DATASOURCE_USERNAME: dev
+  #     SPRING_DATASOURCE_PASSWORD: dev
+  #   depends_on:
+  #     - postgres
+
+  # recipe-service:
+  #   build: ./services/recipe-service
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/recipedb
+  #     SPRING_DATASOURCE_USERNAME: dev
+  #     SPRING_DATASOURCE_PASSWORD: dev
+  #     SPRING_REDIS_HOST: redis
+  #   depends_on:
+  #     - postgres
+  #     - redis
+
+volumes:
+  pgdata:
