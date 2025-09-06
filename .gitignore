@@ -1,0 +1,83 @@
+# ==========================
+# Operating System files
+# ==========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================
+# IDE / Editor files
+# ==========================
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# ==========================
+# Java / Maven / Gradle
+# ==========================
+/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*.cache
+*.tmp
+
+# Gradle
+.gradle/
+build/
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# ==========================
+# Docker / Compose
+# ==========================
+**/Dockerfile.*
+docker-compose.override.yml
+docker-compose.*.yml
+docker-compose.override.yml
+*.env
+*.tmp
+
+# ==========================
+# Logs and temp files
+# ==========================
+logs/
+*.log
+tmp/
+*.swp
+*.swo
+
+# ==========================
+# Spring Boot specific
+# ==========================
+/spring.log
+/.mvn/
+.classpath
+.project
+.settings/
+
+# ==========================
+# Node / frontend (if any)
+# ==========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/
+
+# ==========================
+# Misc
+# ==========================
+*.bak
+*.old
+*.orig
