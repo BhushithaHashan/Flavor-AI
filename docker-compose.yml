@@ -87,10 +87,10 @@ services:
     depends_on:
       auth-service:
         condition: service_healthy
-      user-service:
-        condition: service_healthy
-      recipe-service:
-        condition: service_healthy
+      # user-service:
+      #   condition: service_healthy
+      # recipe-service:
+      #   condition: service_healthy
 
 volumes:
   pgdata:
