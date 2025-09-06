@@ -1,3 +1,6 @@
-CREATE DATABASE authdb;
-CREATE DATABASE userdb;
-CREATE DATABASE recipedb;
+-- init.sql
+CREATE USER root WITH PASSWORD 'root';
+CREATE DATABASE devdb OWNER root;
+CREATE DATABASE authdb OWNER root;
+CREATE DATABASE userdb OWNER root;
+CREATE DATABASE recipedb OWNER root;

@@ -3,15 +3,12 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    environment:
-      POSTGRES_USER: dev
-      POSTGRES_PASSWORD: dev
-      POSTGRES_DB: devdb
+    
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./deploy/postgres/init:/docker-entrypoint-initdb.d
+      - ./deploy/postgres/init/:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dev"]
+      test: ["CMD-SHELL", "pg_isready -U root"]
       interval: 5s
       timeout: 2s
       retries: 10
@@ -26,12 +23,11 @@ services:
 
   auth-service:
     build: ./services/auth-service/auth-service
-    volumes:
-      - maven-repo:/root/.m2
+    
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
-      SPRING_DATASOURCE_USERNAME: dev
-      SPRING_DATASOURCE_PASSWORD: dev
+      # SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
+      # SPRING_DATASOURCE_USERNAME: dev
+      # SPRING_DATASOURCE_PASSWORD: dev
       SPRING_REDIS_HOST: redis
       JWT_SECRET: c2VjdXJlLXRvcC1zZWNyZXQta2V5LTI1Ni1iaXRzLXNlY3VyZQ==
 
