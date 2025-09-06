@@ -26,12 +26,15 @@ services:
 
   auth-service:
     build: ./services/auth-service/auth-service
+    volumes:
+      - maven-repo:/root/.m2
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
       SPRING_DATASOURCE_USERNAME: dev
       SPRING_DATASOURCE_PASSWORD: dev
       SPRING_REDIS_HOST: redis
-      JWT_SECRET: my_super_secret_key_here
+      JWT_SECRET: c2VjdXJlLXRvcC1zZWNyZXQta2V5LTI1Ni1iaXRzLXNlY3VyZQ==
+
     depends_on:
       postgres:
         condition: service_healthy
