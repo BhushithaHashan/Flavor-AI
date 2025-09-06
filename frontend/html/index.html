@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlavorAI - AI-Powered Recipe Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #FF6B6B;
+            --primary-dark: #e55a5a;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #1A1A2E;
+            --light: #F7F7F7;
+            --gray: #8A8A8A;
+            --light-gray: #f0f0f0;
+            --transition: all 0.3s ease;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Modern Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            transition: var(--transition);
+        }
+
+        nav a:hover:after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Mobile menu button */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 3px;
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            padding: 80px 0;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transform: perspective(800px) rotateY(-10deg);
+            transition: var(--transition);
+        }
+
+        .hero-image img:hover {
+            transform: perspective(800px) rotateY(0);
+        }
+
+        /* Recipe Generator Form */
+        .recipe-generator {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 50px;
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 16px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .input-with-icon input, 
+        .input-with-icon select, 
+        .input-with-icon textarea {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            font-size: 16px;
+            transition: var(--transition);
+            background: var(--light);
+        }
+
+        .input-with-icon input:focus, 
+        .input-with-icon select:focus, 
+        .input-with-icon textarea:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .generate-btn {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-generate {
+            padding: 18px 45px;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.35);
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.45);
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 35px 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(255, 107, 107, 0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: var(--secondary);
+            font-size: 32px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+            border-top-left-radius: var(--radius);
+            border-top-right-radius: var(--radius);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .footer-column p {
+            margin-bottom: 20px;
+            opacity: 0.8;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--secondary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 60px 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            /* Improved Mobile Navigation */
+            .menu-toggle {
+                display: flex;
+            }
+            
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: var(--transition);
+                box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                gap: 25px;
+                padding: 20px;
+            }
+            
+            nav.active {
+                right: 0;
+            }
+            
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .auth-buttons .btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            /* Menu toggle animation */
+            .menu-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(4px, -3px);
+                background: var(--primary);
+            }
+            
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .menu-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(4px, 3px);
+                background: var(--primary);
+            }
+            
+            /* Overlay when menu is open */
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                opacity: 0;
+                visibility: hidden;
+                transition: var(--transition);
+                z-index: 999;
+            }
+            
+            .overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .recipe-generator {
+                padding: 30px;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-generate {
+                padding: 16px 30px;
+                font-size: 16px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Improved Header with Modern Navigation -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-utensils"></i>
+                FlavorAI
+            </a>
+            
+            <button class="menu-toggle" id="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <nav id="main-nav">
+                <a href="#">Home</a>
+                <a href="#">How It Works</a>
+                <a href="#">Recipes</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+                
+                <div class="auth-buttons">
+                    <button class="btn btn-outline">Sign In</button>
+                    <button class="btn btn-primary">Sign Up</button>
+                </div>
+            </nav>
+            
+            <div class="overlay" id="overlay"></div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Transform Your Ingredients Into <span>Delicious Recipes</span></h1>
+                <p>FlavorAI uses advanced artificial intelligence to generate personalized recipes based on the ingredients you have on hand. Say goodbye to food waste and hello to culinary creativity!</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary">Get Started</button>
+                    <button class="btn btn-outline">Learn More</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="AI Generated Recipe">
+            </div>
+        </section>
+
+        <!-- Recipe Generator Form -->
+        <section class="recipe-generator">
+            <div class="section-title">
+                <h2>Generate Your Perfect Recipe</h2>
+                <p>Enter your available ingredients and preferences to get a personalized recipe created by our AI</p>
+            </div>
+            
+            <form id="recipe-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="ingredients">Ingredients Available</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-carrot"></i>
+                            <textarea id="ingredients" placeholder="Enter ingredients you have (e.g., chicken, rice, tomatoes, onions)"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cuisine">Cuisine Preference</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-globe"></i>
+                            <select id="cuisine">
+                                <option value="">Any Cuisine</option>
+                                <option value="italian">Italian</option>
+                                <option value="mexican">Mexican</option>
+                                <option value="chinese">Chinese</option>
+                                <option value="indian">Indian</option>
+                                <option value="french">French</option>
+                                <option value="thai">Thai</option>
+                                <option value="japanese">Japanese</option>
+                                <option value="mediterranean">Mediterranean</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="meal-type">Meal Type</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-utensils"></i>
+                            <select id="meal-type">
+                                <option value="">Any Meal</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="snack">Snack</option>
+                                <option value="dessert">Dessert</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dietary">Dietary Restrictions</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-leaf"></i>
+                            <select id="dietary">
+                                <option value="">No Restrictions</option>
+                                <option value="vegetarian">Vegetarian</option>
+                                <option value="vegan">Vegan</option>
+                                <option value="gluten-free">Gluten-Free</option>
+                                <option value="dairy-free">Dairy-Free</option>
+                                <option value="keto">Keto</option>
+                                <option value="paleo">Paleo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="allergies">Allergies or Ingredients to Avoid</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <input type="text" id="allergies" placeholder="List any ingredients to avoid (e.g., nuts, shellfish)">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="generate-btn">
+                    <button type="submit" class="btn-generate">
+                        <i class="fas fa-magic"></i>
+                        Generate Recipe
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI-Powered</h3>
+                <p>Our advanced AI analyzes thousands of recipes to create the perfect dish for your ingredients.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-recycle"></i>
+                </div>
+                <h3>Reduce Waste</h3>
+                <p>Use ingredients you already have to minimize food waste and save money.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Personalized</h3>
+                <p>Recipes tailored to your dietary needs, preferences, and cooking skill level.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FlavorAI</h3>
+                    <p>Transforming ingredients into delicious recipes with the power of artificial intelligence.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Recipes</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Cooking Tips</a></li>
+                        <li><a href="#">Dietary Guides</a></li>
+                        <li><a href="#">Recipe Collections</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter to get weekly recipe ideas and cooking tips.</p>
+                    <form>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" placeholder="Your email address">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 FlavorAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile navigation toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            const overlay = document.getElementById('overlay');
+            
+            menuToggle.addEventListener('click', function() {
+                menuToggle.classList.toggle('active');
+                mainNav.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
+            });
+            
+            overlay.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                mainNav.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // Form submission
+            const recipeForm = document.getElementById('recipe-form');
+            
+            recipeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const ingredients = document.getElementById('ingredients').value;
+                const cuisine = document.getElementById('cuisine').value;
+                const mealType = document.getElementById('meal-type').value;
+                const dietary = document.getElementById('dietary').value;
+                const allergies = document.getElementById('allergies').value;
+                
+                // In a real application, you would send this data to your backend
+                console.log('Recipe Generation Request:', { 
+                    ingredients, 
+                    cuisine, 
+                    mealType, 
+                    dietary, 
+                    allergies 
+                });
+                
+                // Simulate recipe generation
+                alert('Recipe generated successfully! Check the console for details.');
+                
+                // In a real app, you would display the generated recipe
+            });
+            
+            // Auth buttons functionality
+            const signInBtn = document.querySelectorAll('.btn-outline');
+            const signUpBtn = document.querySelectorAll('.btn-primary');
+            
+            signInBtn.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    alert('Redirecting to sign in page...');
+                    // In a real app, you would redirect to the sign in page
+                });
+            });
+            
+            signUpBtn.forEach(btn => {
+                if (!btn.closest('.footer-column')) {
+                    btn.addEventListener('click', function() {
+                        alert('Redirecting to sign up page...');
+                        // In a real app, you would redirect to the sign up page
+                    });
+                }
+            });
+            
+            // Get Started button functionality
+            const getStartedBtn = document.querySelector('.hero .btn-primary');
+            
+            getStartedBtn.addEventListener('click', function() {
+                document.getElementById('recipe-form').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            });
+            
+            // Learn More button functionality
+            const learnMoreBtn = document.querySelector('.hero .btn-outline');
+            
+            learnMoreBtn.addEventListener('click', function() {
+                document.querySelector('.features').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            });
+        });
+    </script>
+</body>
+</html>

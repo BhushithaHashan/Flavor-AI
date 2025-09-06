@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/authdb
-    username: root
-    password: root
+    username: dev
+    password: dev
   jpa:
     hibernate:
       ddl-auto: update
@@ -10,7 +10,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
+logging:
+  level:
+    org.springframework.security: DEBUG
+    com.ai.recipe.auth_service: DEBUG
+    com.ai.recipe.auth_service.config: TRACE
+    com.ai.recipe.auth_service.controller: TRACE
 jwt:
   secret: ${JWT_SECRET:c2VjdXJlLXRvcC1zZWNyZXQta2V5LTI1Ni1iaXRzLXNlY3VyZQ==}
   expiration-ms: 86400000 

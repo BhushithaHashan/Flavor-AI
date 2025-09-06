@@ -3,14 +3,17 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: devdb
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./deploy/postgres/init/:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U root"]
+      test: ["CMD-SHELL", "pg_isready -U dev -d authdb"]
       interval: 5s
-      timeout: 2s
+      timeout: 5s
       retries: 10
 
   redis:
@@ -36,11 +39,11 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health || exit 1"]
-      interval: 5s
-      timeout: 2s
-      retries: 10
+    # healthcheck:
+    #   # test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health || exit 1"]
+    #   interval: 5s
+    #   timeout: 2s
+    #   retries: 10
 
   # user-service:
   #   build: ./services/user-service
@@ -78,14 +81,14 @@ services:
   nginx:
     image: nginx:stable
     ports:
-      - '8080:80'
+      - "8080:80"
     volumes:
       - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./deploy/nginx/wait-for-services.sh:/wait-for-services.sh
-    entrypoint: ["/wait-for-services.sh"]
-    depends_on:
-      auth-service:
-        condition: service_healthy
+
+    # entrypoint: ["/wait-for-services.sh"]
+    # depends_on:
+    #   auth-service:
+    #     condition: service_healthy
       # user-service:
       #   condition: service_healthy
       # recipe-service:
