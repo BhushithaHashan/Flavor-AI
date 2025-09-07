@@ -1,20 +1,23 @@
 package com.ai.recipe.auth_service.controller;
 
 import com.ai.recipe.auth_service.entity.User;
+import com.ai.recipe.auth_service.model.AuthProvider;
+import com.ai.recipe.auth_service.model.Role;
 import com.ai.recipe.auth_service.security.JwtUtil;
 import com.ai.recipe.auth_service.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class); // ADD THIS LINE
-    
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
     private final AuthService authService;
     private final JwtUtil jwtUtil;
 
@@ -25,24 +28,51 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> req) {
-        logger.info("=== REGISTER ENDPOINT HIT ==="); // ADD THIS
-        logger.info("Request received: {}", req); // ADD THIS
-        
-        User user = authService.register(req.get("username"), req.get("password"));
-        return ResponseEntity.ok(user);
+        logger.info("=== REGISTER ENDPOINT HIT ===");
+        logger.info("Request received: {}", req);
+
+        String email = req.get("email");
+        String password = req.get("password");
+        String username = req.get("username"); // optional, can be null
+
+        try {
+            User user = authService.register(email, password, username, Role.USER, AuthProvider.LOCAL);
+            String token = jwtUtil.generateToken(user.getEmail());
+
+            return ResponseEntity.ok(Map.of(
+                    "token", token,
+                    "email", user.getEmail(),
+                    "username", user.getUsername(),
+                    "role", user.getRole()
+            ));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
+        }
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> req) {
-        logger.info("=== LOGIN ENDPOINT HIT ==="); // ADD THIS
-        logger.info("Login request received: {}", req); // ADD THIS
-        
-        User user = authService.validateUser(req.get("username"), req.get("password"));
-        String token = jwtUtil.generateToken(user.getUsername());
-        return ResponseEntity.ok(Map.of("token", token));
+        logger.info("=== LOGIN ENDPOINT HIT ===");
+        logger.info("Login request received: {}", req);
+
+        String email = req.get("email");
+        String password = req.get("password");
+
+        try {
+            User user = authService.validateUser(email, password);
+            String token = jwtUtil.generateToken(user.getEmail());
+
+            return ResponseEntity.ok(Map.of(
+                    "token", token,
+                    "email", user.getEmail(),
+                    "username", user.getUsername(),
+                    "role", user.getRole()
+            ));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+        }
     }
 
-    // ADD THIS TEST ENDPOINT
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         logger.info("=== TEST ENDPOINT HIT ===");
