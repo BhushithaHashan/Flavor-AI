@@ -37,10 +37,10 @@ public class AuthController {
 
         try {
             User user = authService.register(email, password, username, Role.USER, AuthProvider.LOCAL);
-            String token = jwtUtil.generateToken(user.getEmail());
+            String token = jwtUtil.generateToken(user.getId(),user.getEmail());
 
         return ResponseEntity.ok(Map.of(
-            "id", user.getId(),            
+            // "id", user.getId(),            
             "token", token,
             "email", user.getEmail(),
             "username", user.getUsername(),
@@ -62,10 +62,10 @@ public class AuthController {
 
         try {
             User user = authService.validateUser(email, password);
-            String token = jwtUtil.generateToken(user.getEmail());
+            String token = jwtUtil.generateToken(user.getId(),user.getEmail());
 
             return ResponseEntity.ok(Map.of(
-                "id", user.getId(),            
+                // "id", user.getId(),            
                 "token", token,
                 "email", user.getEmail(),
                 "username", user.getUsername(),
