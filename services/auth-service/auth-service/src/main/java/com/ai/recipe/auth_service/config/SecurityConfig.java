@@ -15,22 +15,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         logger.info("=== SECURITY CONFIG LOADING ===");
-        logger.info("Configuring security filter chain...");
-        
+
         http
-            .csrf(csrf -> {
-                logger.info("Disabling CSRF");
-                csrf.disable();
-            }) 
+            .csrf(csrf -> csrf.disable()) // stateless API, disable CSRF
             .authorizeHttpRequests(auth -> {
                 logger.info("Configuring authorization rules");
-                logger.info("Permitting all requests to /api/auth/**");
-                auth.requestMatchers("/api/auth/**").permitAll();
+
+                // Public endpoints
+                auth.requestMatchers("/api/auth/register").permitAll();
+                auth.requestMatchers("/api/auth/login").permitAll();
+                auth.requestMatchers("/api/auth/test").permitAll();
+
+                // Everything else under /api/auth/** requires authentication
+                auth.requestMatchers("/api/auth/**").authenticated();
+
                 logger.info("All other requests require authentication");
-                auth.anyRequest().authenticated();
             });
-        
-        logger.info("Security configuration complete");
+
         return http.build();
     }
 }

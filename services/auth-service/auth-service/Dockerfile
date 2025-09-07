@@ -1,17 +1,19 @@
 # Use OpenJDK 21
 FROM eclipse-temurin:21-jdk-alpine
 
-# Set working directory
+USER root
+RUN apk update && apk add --no-cache curl
+# Set working directorycd 
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml first (for dependency caching)
-COPY mvnw pom.xml ./
+# Copy only Maven wrapper and pom first
+COPY pom.xml mvnw ./
 COPY .mvn .mvn
 
-# Download dependencies separately (cache layer)
+# Fetch dependencies offline (using mounted cache if available)
 RUN ./mvnw dependency:go-offline
 
-# Copy the source code after dependencies cached
+# Copy source code
 COPY src src
 
 # Build the JAR

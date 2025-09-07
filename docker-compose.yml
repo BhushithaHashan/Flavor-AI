@@ -26,7 +26,8 @@ services:
 
   auth-service:
     build: ./services/auth-service/auth-service
-    
+    volumes:
+      - ~/.m2:/root/.m2  
     environment:
       # SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
       # SPRING_DATASOURCE_USERNAME: dev
@@ -39,11 +40,14 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    # healthcheck:
-    #   # test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health || exit 1"]
-    #   interval: 5s
-    #   timeout: 2s
-    #   retries: 10
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/api/auth/test || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+
 
   # user-service:
   #   build: ./services/user-service
@@ -86,9 +90,9 @@ services:
       - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
     # entrypoint: ["/wait-for-services.sh"]
-    # depends_on:
-    #   auth-service:
-    #     condition: service_healthy
+    depends_on:
+      auth-service:
+        condition: service_healthy
       # user-service:
       #   condition: service_healthy
       # recipe-service:
