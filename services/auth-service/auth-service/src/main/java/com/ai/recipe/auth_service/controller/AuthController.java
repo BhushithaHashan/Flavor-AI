@@ -39,12 +39,14 @@ public class AuthController {
             User user = authService.register(email, password, username, Role.USER, AuthProvider.LOCAL);
             String token = jwtUtil.generateToken(user.getEmail());
 
-            return ResponseEntity.ok(Map.of(
-                    "token", token,
-                    "email", user.getEmail(),
-                    "username", user.getUsername(),
-                    "role", user.getRole()
-            ));
+        return ResponseEntity.ok(Map.of(
+            "id", user.getId(),            
+            "token", token,
+            "email", user.getEmail(),
+            "username", user.getUsername(),
+            "role", user.getRole()
+        ));
+
         } catch (RuntimeException e) {
             return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
         }
@@ -63,11 +65,13 @@ public class AuthController {
             String token = jwtUtil.generateToken(user.getEmail());
 
             return ResponseEntity.ok(Map.of(
-                    "token", token,
-                    "email", user.getEmail(),
-                    "username", user.getUsername(),
-                    "role", user.getRole()
+                "id", user.getId(),            
+                "token", token,
+                "email", user.getEmail(),
+                "username", user.getUsername(),
+                "role", user.getRole()
             ));
+
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
         }
