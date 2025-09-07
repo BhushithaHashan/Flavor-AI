@@ -4,11 +4,14 @@ FROM eclipse-temurin:21-jdk-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy Maven files
-COPY pom.xml mvnw ./
+# Copy Maven wrapper and pom.xml first (for dependency caching)
+COPY mvnw pom.xml ./
 COPY .mvn .mvn
 
-# Copy source code
+# Download dependencies separately (cache layer)
+RUN ./mvnw dependency:go-offline
+
+# Copy the source code after dependencies cached
 COPY src src
 
 # Build the JAR
