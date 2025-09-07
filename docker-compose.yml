@@ -49,20 +49,24 @@ services:
 
 
 
-  # user-service:
-  #   build: ./services/user-service
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userdb
-  #     SPRING_DATASOURCE_USERNAME: dev
-  #     SPRING_DATASOURCE_PASSWORD: dev
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health || exit 1"]
-  #     interval: 5s
-  #     timeout: 2s
-  #     retries: 10
+  user-service:
+    build: ./services/user-service
+    volumes:
+      - ~/.m2:/root/.m2 
+    environment:
+      # SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userdb
+      # SPRING_DATASOURCE_USERNAME: dev
+      # SPRING_DATASOURCE_PASSWORD: dev
+      SPRING_REDIS_HOST: redis
+      JWT_SECRET: c2VjdXJlLXRvcC1zZWNyZXQta2V5LTI1Ni1iaXRzLXNlY3VyZQ==
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8081/api/auth/test || exit 1"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
 
   # recipe-service:
   #   build: ./services/recipe-service
