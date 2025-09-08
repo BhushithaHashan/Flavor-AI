@@ -31,8 +31,7 @@ public class UserProfileService {
     @Transactional
     public UserProfile createOrUpdateProfile(Long authUserId, UpdateProfileRequest request) {
         Optional<UserProfile> existingOpt = repository.findByAuthUserId(authUserId);
-        String safePreferences = request.getPreferences() != null ? request.getPreferences() : "{}";
-        String safeAllergies  = request.getAllergies() != null ? request.getAllergies() : "[]";
+        
 
         UserProfile profile;
         if (existingOpt.isPresent()) {
@@ -41,8 +40,8 @@ public class UserProfileService {
             profile.setFullName(request.getFullName());
             profile.setBio(request.getBio());
             profile.setAvatarUrl(request.getAvatarUrl());
-            profile.setPreferences(safePreferences); // JSON string
-            profile.setAllergies(safeAllergies);     // JSON string
+            profile.setPreferences(request.getPreferences()); // JSON string
+            profile.setAllergies(request.getAllergies());     // JSON string
         } else {
             // Create new profile
             profile = UserProfile.builder()
@@ -50,8 +49,8 @@ public class UserProfileService {
                     .fullName(request.getFullName())
                     .bio(request.getBio())
                     .avatarUrl(request.getAvatarUrl())
-                    .preferences(safePreferences)
-                    .allergies(safeAllergies)
+                    .preferences(request.getPreferences())
+                    .allergies(request.getAllergies())
                     .build();
         }
 

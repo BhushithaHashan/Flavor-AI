@@ -24,10 +24,10 @@ public class UserProfile {
     private String bio;
     private String avatarUrl;
 
-    @Column(columnDefinition = "jsonb")
+    @Column
     private String preferences; // JSON string for dietary preferences
 
-    @Column(columnDefinition = "jsonb")
+    @Column
     private String allergies; // JSON string for allergies
 
     @Column(name = "created_at", nullable = false, updatable = false)
