@@ -33,6 +33,7 @@
             min-height: 100vh;
             color: var(--dark);
             line-height: 1.6;
+            scroll-padding-top: 80px; /* Prevent content from being hidden behind sticky header */
         }
 
         .container {
@@ -112,6 +113,66 @@
         .auth-buttons {
             display: flex;
             gap: 15px;
+            align-items: center;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .user-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        .user-dropdown a:hover {
+            background: var(--light);
+            color: var(--primary);
         }
 
         .btn {
@@ -175,7 +236,7 @@
             display: flex;
             align-items: center;
             gap: 50px;
-            padding: 80px 0;
+            padding: 100px 0 80px; /* Added top padding to account for sticky header */
         }
 
         .hero-content {
@@ -233,7 +294,7 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             padding: 50px;
-            margin-bottom: 80px;
+            margin: 80px 0; /* Added top margin to account for sticky header */
         }
 
         .section-title {
@@ -345,7 +406,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 30px;
-            margin-bottom: 80px;
+            margin: 80px 0; /* Added top margin to account for sticky header */
         }
 
         .feature-card {
@@ -491,7 +552,7 @@
             .hero {
                 flex-direction: column;
                 text-align: center;
-                padding: 60px 0;
+                padding: 80px 0 60px; /* Adjusted padding for mobile */
             }
             
             .hero h1 {
@@ -631,9 +692,8 @@
                 <a href="#">About</a>
                 <a href="#">Contact</a>
                 
-                <div class="auth-buttons">
-                    <button class="btn btn-outline">Sign In</button>
-                    <button class="btn btn-primary">Sign Up</button>
+                <div class="auth-buttons" id="auth-buttons">
+                    <!-- This will be populated by JavaScript based on login state -->
                 </div>
             </nav>
             
@@ -648,7 +708,7 @@
                 <h1>Transform Your Ingredients Into <span>Delicious Recipes</span></h1>
                 <p>FlavorAI uses advanced artificial intelligence to generate personalized recipes based on the ingredients you have on hand. Say goodbye to food waste and hello to culinary creativity!</p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary">Get Started</button>
+                    <button class="btn btn-primary" id="get-started-btn">Get Started</button>
                     <button class="btn btn-outline">Learn More</button>
                 </div>
             </div>
@@ -658,7 +718,7 @@
         </section>
 
         <!-- Recipe Generator Form -->
-        <section class="recipe-generator">
+        <section class="recipe-generator" id="recipe-generator">
             <div class="section-title">
                 <h2>Generate Your Perfect Recipe</h2>
                 <p>Enter your available ingredients and preferences to get a personalized recipe created by our AI</p>
@@ -827,90 +887,141 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mobile navigation toggle
-            const menuToggle = document.getElementById('menu-toggle');
-            const mainNav = document.getElementById('main-nav');
-            const overlay = document.getElementById('overlay');
-            
-            menuToggle.addEventListener('click', function() {
-                menuToggle.classList.toggle('active');
-                mainNav.classList.toggle('active');
-                overlay.classList.toggle('active');
-                document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
-            });
-            
-            overlay.addEventListener('click', function() {
-                menuToggle.classList.remove('active');
-                mainNav.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-            
-            // Form submission
-            const recipeForm = document.getElementById('recipe-form');
-            
-            recipeForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const ingredients = document.getElementById('ingredients').value;
-                const cuisine = document.getElementById('cuisine').value;
-                const mealType = document.getElementById('meal-type').value;
-                const dietary = document.getElementById('dietary').value;
-                const allergies = document.getElementById('allergies').value;
-                
-                // In a real application, you would send this data to your backend
-                console.log('Recipe Generation Request:', { 
-                    ingredients, 
-                    cuisine, 
-                    mealType, 
-                    dietary, 
-                    allergies 
-                });
-                
-                // Simulate recipe generation
-                alert('Recipe generated successfully! Check the console for details.');
-                
-                // In a real app, you would display the generated recipe
-            });
-            
-            // Auth buttons functionality
-            const signInBtn = document.querySelectorAll('.btn-outline');
-            const signUpBtn = document.querySelectorAll('.btn-primary');
-            
-            signInBtn.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    alert('Redirecting to sign in page...');
-                    // In a real app, you would redirect to the sign in page
-                });
-            });
-            
-            signUpBtn.forEach(btn => {
-                if (!btn.closest('.footer-column')) {
-                    btn.addEventListener('click', function() {
-                        alert('Redirecting to sign up page...');
-                        // In a real app, you would redirect to the sign up page
-                    });
+    const authButtonsContainer = document.getElementById('auth-buttons');
+    const menuToggle = document.getElementById('menu-toggle');
+    const mainNav = document.getElementById('main-nav');
+    const overlay = document.getElementById('overlay');
+
+    // Check JWT token on page load
+    checkAuthState();
+
+    // Mobile navigation toggle
+    menuToggle.addEventListener('click', function() {
+        menuToggle.classList.toggle('active');
+        mainNav.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
+    });
+
+    overlay.addEventListener('click', function() {
+        menuToggle.classList.remove('active');
+        mainNav.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Recipe form submission
+    const recipeForm = document.getElementById('recipe-form');
+    recipeForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const data = {
+            ingredients: document.getElementById('ingredients').value,
+            cuisine: document.getElementById('cuisine').value,
+            mealType: document.getElementById('meal-type').value,
+            dietary: document.getElementById('dietary').value,
+            allergies: document.getElementById('allergies').value
+        };
+        console.log('Recipe Generation Request:', data);
+        alert('Recipe generated successfully! Check the console for details.');
+    });
+
+    // Hero buttons scrolling
+    const getStartedBtn = document.getElementById('get-started-btn');
+    const learnMoreBtn = document.querySelector('.hero .btn-outline');
+
+    getStartedBtn.addEventListener('click', scrollToSection.bind(null, 'recipe-generator'));
+    learnMoreBtn.addEventListener('click', scrollToSection.bind(null, 'features'));
+
+    function scrollToSection(id) {
+        const section = document.getElementById(id) || document.querySelector('.' + id);
+        if (!section) return;
+        const headerHeight = document.querySelector('header').offsetHeight;
+        const sectionPosition = section.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({
+            top: sectionPosition - headerHeight - 20,
+            behavior: 'smooth'
+        });
+    }
+
+    // ------------------ AUTH FUNCTIONS ------------------
+    async function checkAuthState() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            showAuthButtons();
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/auth/validate', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
             });
-            
-            // Get Started button functionality
-            const getStartedBtn = document.querySelector('.hero .btn-primary');
-            
-            getStartedBtn.addEventListener('click', function() {
-                document.getElementById('recipe-form').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-            });
-            
-            // Learn More button functionality
-            const learnMoreBtn = document.querySelector('.hero .btn-outline');
-            
-            learnMoreBtn.addEventListener('click', function() {
-                document.querySelector('.features').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-            });
+
+            if (!res.ok) throw new Error('Invalid token');
+
+            const data = await res.json();
+            showUserMenu(data.email); // you can also fetch name from backend if available
+        } catch (err) {
+            console.log('Token invalid or expired:', err);
+            localStorage.removeItem('token');
+            showAuthButtons();
+        }
+    }
+
+    function showUserMenu(email) {
+        // Use email or fetch full user info if backend supports it
+        authButtonsContainer.innerHTML = `
+            <div class="user-menu" id="user-menu">
+                <div class="user-avatar">${email.charAt(0).toUpperCase()}</div>
+                <span>${email}</span>
+                <div class="user-dropdown" id="user-dropdown">
+                    <a href="#"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#"><i class="fas fa-heart"></i> Saved Recipes</a>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        `;
+
+        const userMenu = document.getElementById('user-menu');
+        const userDropdown = document.getElementById('user-dropdown');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('active');
         });
+
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            showAuthButtons();
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!userMenu.contains(e.target)) {
+                userDropdown.classList.remove('active');
+            }
+        });
+    }
+
+    function showAuthButtons() {
+        authButtonsContainer.innerHTML = `
+            <button class="btn btn-outline" id="signin-btn">Sign In</button>
+            <button class="btn btn-primary" id="signup-btn">Sign Up</button>
+        `;
+
+        document.getElementById('signin-btn').addEventListener('click', function() {
+            window.location.href = '/login.html'; // your login page
+        });
+
+        document.getElementById('signup-btn').addEventListener('click', function() {
+            window.location.href = '/register.html'; // your signup page
+        });
+    }
+});
+
     </script>
 </body>
 </html>
