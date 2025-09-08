@@ -31,10 +31,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.replace("Bearer ", "");
+            System.out.println("**##yoooooo token recieved from authfilter heres the token :"+token);
 
             if (jwtUtil.validateToken(token)) {
                 // Extract userId from token
                 Long userId = jwtUtil.getUserIdFromToken(token);
+                System.out.println("yo heres the id generated from auth filter:"+userId);
 
                 // Create an Authentication object
                 UsernamePasswordAuthenticationToken auth =
