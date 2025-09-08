@@ -26,8 +26,18 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.get("id", Long.class);
+        Object idObj = claims.get("id"); // get as Object
+        if (idObj instanceof Integer) {
+            return ((Integer) idObj).longValue();
+        } else if (idObj instanceof Long) {
+            return (Long) idObj;
+        } else if (idObj instanceof String) {
+            return Long.parseLong((String) idObj);
+        } else {
+            throw new RuntimeException("Unexpected type for id claim: " + idObj);
+        }
     }
+
 
     /**
      * Extract username/email (optional)

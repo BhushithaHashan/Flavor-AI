@@ -8,12 +8,14 @@ import com.ai.recipe.user_service.security.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserProfileController {
-
+    private static final Logger logger = LoggerFactory.getLogger(UserProfileController.class);
     private final UserProfileService profileService;
     private final JwtUtil jwtUtil;
 
@@ -28,6 +30,7 @@ public class UserProfileController {
     @GetMapping("/profile")
     public ResponseEntity<UserProfileResponse> getProfile(@RequestHeader("Authorization") String authHeader) {
         Long authUserId = extractAuthUserId(authHeader);
+        
         UserProfile profile = profileService.getProfile(authUserId);
         return ResponseEntity.ok(convertToResponse(profile));
     }
@@ -41,9 +44,16 @@ public class UserProfileController {
             @RequestBody UpdateProfileRequest request) {
 
         Long authUserId = extractAuthUserId(authHeader);
+        logger.info("AuthUserId extracted from token: {}", authUserId);
         UserProfile profile = profileService.createOrUpdateProfile(authUserId, request);
         return ResponseEntity.ok(convertToResponse(profile));
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("User Service is working!");
+    }
+
 
     /**
      * Helper method to extract authUserId from JWT
