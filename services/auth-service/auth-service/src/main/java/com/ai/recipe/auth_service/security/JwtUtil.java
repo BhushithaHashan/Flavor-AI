@@ -26,6 +26,7 @@ public class JwtUtil {
      * Generate JWT token containing authUserId and username/email
      */
     public String generateToken(Long userId, String email) {
+        System.out.println("heres the passed values :"+userId+"/"+email);
         return Jwts.builder()
                 .setSubject(email)      // can be email or username
                 .claim("id", userId)       // add authUserId

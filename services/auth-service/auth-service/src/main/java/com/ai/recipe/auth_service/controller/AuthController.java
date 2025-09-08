@@ -37,6 +37,8 @@ public class AuthController {
 
         try {
             User user = authService.register(email, password, username, Role.USER, AuthProvider.LOCAL);
+            System.out.println("heres the id of the user:"+user.getId());
+            System.out.println("here the email:"+user.getEmail());
             String token = jwtUtil.generateToken(user.getId(),user.getEmail());
 
         return ResponseEntity.ok(Map.of(
