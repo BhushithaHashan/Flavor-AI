@@ -7,6 +7,7 @@ import com.ai.recipe.auth_service.security.JwtUtil;
 import com.ai.recipe.auth_service.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    
+    @Value("${USER_SERVICE_URL}")
+    private String userServiceUrl;
+
+    @Value("${INTERNAL_API_KEY}")
+    private String internalApiKey;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
