@@ -41,4 +41,7 @@ public class AuthService {
                 .filter(u -> encoder.matches(password, u.getPassword()))
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
     }
+    public String validateUser(String email){
+        return userRepository.findByEmail(email).get().getUsername();
+    }
 }

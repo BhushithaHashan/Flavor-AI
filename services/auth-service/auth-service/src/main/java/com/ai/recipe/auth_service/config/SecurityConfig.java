@@ -25,6 +25,7 @@ public class SecurityConfig {
                 auth.requestMatchers("/api/auth/register").permitAll();
                 auth.requestMatchers("/api/auth/login").permitAll();
                 auth.requestMatchers("/api/auth/test").permitAll();
+                auth.requestMatchers("/api/auth/validate").permitAll();
 
                 // Everything else under /api/auth/** requires authentication
                 auth.requestMatchers("/api/auth/**").authenticated();

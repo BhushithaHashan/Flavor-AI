@@ -87,4 +87,31 @@ public class AuthController {
         logger.info("=== TEST ENDPOINT HIT ===");
         return ResponseEntity.ok("Auth controller is working!");
     }
+    @GetMapping("/validate")
+    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authHeader) {
+        logger.info("=== VALIDATE TOKEN ENDPOINT HIT ===");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(400).body(Map.of("error", "Missing or invalid Authorization header"));
+        }
+
+        String token = authHeader.substring(7); // remove "Bearer "
+
+        boolean isValid = jwtUtil.validateToken(token);
+        if (!isValid) {
+            return ResponseEntity.status(401).body(Map.of("error", "Invalid or expired token"));
+        }
+
+        // Optionally, extract user info
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        String email = jwtUtil.extractUsername(token);
+        String username = authService.validateUser(email);
+
+        return ResponseEntity.ok(Map.of(
+            "valid", true,
+            "username", username,
+            "email", email
+        ));
+    }
+
 }
