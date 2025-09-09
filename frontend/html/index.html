@@ -886,142 +886,147 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const authButtonsContainer = document.getElementById('auth-buttons');
-    const menuToggle = document.getElementById('menu-toggle');
-    const mainNav = document.getElementById('main-nav');
-    const overlay = document.getElementById('overlay');
+    console.log("Script loaded");
 
-    // Check JWT token on page load
-    checkAuthState();
+    document.addEventListener('DOMContentLoaded', function() {
+        const authButtonsContainer = document.getElementById('auth-buttons');
+        const menuToggle = document.getElementById('menu-toggle');
+        const mainNav = document.getElementById('main-nav');
+        const overlay = document.getElementById('overlay');
 
-    // Mobile navigation toggle
-    menuToggle.addEventListener('click', function() {
-        menuToggle.classList.toggle('active');
-        mainNav.classList.toggle('active');
-        overlay.classList.toggle('active');
-        document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
-    });
+        // ------------------ AUTH FUNCTIONS ------------------
+        async function checkAuthState() {
+            console.log("checkAuthState called");
+            const token = localStorage.getItem('jwtToken'); // <-- fixed key
+            console.log("Token from localStorage:", token);
 
-    overlay.addEventListener('click', function() {
-        menuToggle.classList.remove('active');
-        mainNav.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    });
+            if (!token) {
+                showAuthButtons();
+                return;
+            }
 
-    // Recipe form submission
-    const recipeForm = document.getElementById('recipe-form');
-    recipeForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const data = {
-            ingredients: document.getElementById('ingredients').value,
-            cuisine: document.getElementById('cuisine').value,
-            mealType: document.getElementById('meal-type').value,
-            dietary: document.getElementById('dietary').value,
-            allergies: document.getElementById('allergies').value
-        };
-        console.log('Recipe Generation Request:', data);
-        alert('Recipe generated successfully! Check the console for details.');
-    });
+            try {
+                const res = await fetch('http://localhost:8080/api/auth/validate', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
 
-    // Hero buttons scrolling
-    const getStartedBtn = document.getElementById('get-started-btn');
-    const learnMoreBtn = document.querySelector('.hero .btn-outline');
+                if (!res.ok) throw new Error('Invalid token');
 
-    getStartedBtn.addEventListener('click', scrollToSection.bind(null, 'recipe-generator'));
-    learnMoreBtn.addEventListener('click', scrollToSection.bind(null, 'features'));
-
-    function scrollToSection(id) {
-        const section = document.getElementById(id) || document.querySelector('.' + id);
-        if (!section) return;
-        const headerHeight = document.querySelector('header').offsetHeight;
-        const sectionPosition = section.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({
-            top: sectionPosition - headerHeight - 20,
-            behavior: 'smooth'
-        });
-    }
-
-    // ------------------ AUTH FUNCTIONS ------------------
-    async function checkAuthState() {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            showAuthButtons();
-            return;
+                const data = await res.json();
+                console.log("Validation response:", data);
+                showUserMenu(data.username); // use data.username if available
+            } catch (err) {
+                console.error('Token invalid or expired:', err);
+                localStorage.removeItem('jwtToken');
+                showAuthButtons();
+            }
         }
 
-        try {
-            const res = await fetch('/api/auth/validate', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+        function showUserMenu(email) {
+            authButtonsContainer.innerHTML = `
+                <div class="user-menu" id="user-menu">
+                    <div class="user-avatar">${email.charAt(0).toUpperCase()}</div>
+                    <span>${email}</span>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <a href="#"><i class="fas fa-user"></i> Profile</a>
+                        <a href="#"><i class="fas fa-heart"></i> Saved Recipes</a>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            `;
+
+            const userMenu = document.getElementById('user-menu');
+            const userDropdown = document.getElementById('user-dropdown');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            userMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
             });
 
-            if (!res.ok) throw new Error('Invalid token');
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('jwtToken');
+                showAuthButtons();
+            });
 
-            const data = await res.json();
-            showUserMenu(data.email); // you can also fetch name from backend if available
-        } catch (err) {
-            console.log('Token invalid or expired:', err);
-            localStorage.removeItem('token');
-            showAuthButtons();
+            document.addEventListener('click', function(e) {
+                if (!userMenu.contains(e.target)) {
+                    userDropdown.classList.remove('active');
+                }
+            });
         }
-    }
 
-    function showUserMenu(email) {
-        // Use email or fetch full user info if backend supports it
-        authButtonsContainer.innerHTML = `
-            <div class="user-menu" id="user-menu">
-                <div class="user-avatar">${email.charAt(0).toUpperCase()}</div>
-                <span>${email}</span>
-                <div class="user-dropdown" id="user-dropdown">
-                    <a href="#"><i class="fas fa-user"></i> Profile</a>
-                    <a href="#"><i class="fas fa-heart"></i> Saved Recipes</a>
-                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
-                    <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                </div>
-            </div>
-        `;
+        function showAuthButtons() {
+            authButtonsContainer.innerHTML = `
+                <button class="btn btn-outline" id="signin-btn">Sign In</button>
+                <button class="btn btn-primary" id="signup-btn">Sign Up</button>
+            `;
 
-        const userMenu = document.getElementById('user-menu');
-        const userDropdown = document.getElementById('user-dropdown');
-        const logoutBtn = document.getElementById('logout-btn');
+            document.getElementById('signin-btn').addEventListener('click', function() {
+                window.location.href = 'new-sign-up.html'; // login page
+            });
 
-        userMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
-            userDropdown.classList.toggle('active');
+            document.getElementById('signup-btn').addEventListener('click', function() {
+                window.location.href = 'new-sign-up.html'; // signup page
+            });
+        }
+
+        // ------------------ MOBILE MENU ------------------
+        menuToggle.addEventListener('click', function() {
+            menuToggle.classList.toggle('active');
+            mainNav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
         });
 
-        logoutBtn.addEventListener('click', function(e) {
+        overlay.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            mainNav.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // ------------------ RECIPE FORM ------------------
+        const recipeForm = document.getElementById('recipe-form');
+        recipeForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            localStorage.removeItem('token');
-            showAuthButtons();
+            const data = {
+                ingredients: document.getElementById('ingredients').value,
+                cuisine: document.getElementById('cuisine').value,
+                mealType: document.getElementById('meal-type').value,
+                dietary: document.getElementById('dietary').value,
+                allergies: document.getElementById('allergies').value
+            };
+            console.log('Recipe Generation Request:', data);
+            alert('Recipe generated successfully! Check the console for details.');
         });
 
-        document.addEventListener('click', function(e) {
-            if (!userMenu.contains(e.target)) {
-                userDropdown.classList.remove('active');
-            }
-        });
-    }
+        // ------------------ HERO BUTTONS SCROLL ------------------
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const learnMoreBtn = document.querySelector('.hero .btn-outline');
 
-    function showAuthButtons() {
-        authButtonsContainer.innerHTML = `
-            <button class="btn btn-outline" id="signin-btn">Sign In</button>
-            <button class="btn btn-primary" id="signup-btn">Sign Up</button>
-        `;
+        getStartedBtn.addEventListener('click', scrollToSection.bind(null, 'recipe-generator'));
+        learnMoreBtn.addEventListener('click', scrollToSection.bind(null, 'features'));
 
-        document.getElementById('signin-btn').addEventListener('click', function() {
-            window.location.href = '/login.html'; // your login page
-        });
+        function scrollToSection(id) {
+            const section = document.getElementById(id) || document.querySelector('.' + id);
+            if (!section) return;
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const sectionPosition = section.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({
+                top: sectionPosition - headerHeight - 20,
+                behavior: 'smooth'
+            });
+        }
 
-        document.getElementById('signup-btn').addEventListener('click', function() {
-            window.location.href = '/register.html'; // your signup page
-        });
-    }
-});
-
+        // ------------------ INITIAL CHECK ------------------
+        checkAuthState();
+    });
     </script>
+
 </body>
 </html>

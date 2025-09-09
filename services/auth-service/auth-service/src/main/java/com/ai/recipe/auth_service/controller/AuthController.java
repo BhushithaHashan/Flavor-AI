@@ -46,7 +46,6 @@ public class AuthController {
             "token", token,
             "username",user.getUsername(),
             "email", user.getEmail(),
-            "username", user.getUsername(),
             "role", user.getRole()
         ));
 
@@ -73,7 +72,6 @@ public class AuthController {
                 "token", token,
                 "username",user.getUsername(),
                 "email", user.getEmail(),
-                "username", user.getUsername(),
                 "role", user.getRole()
             ));
 

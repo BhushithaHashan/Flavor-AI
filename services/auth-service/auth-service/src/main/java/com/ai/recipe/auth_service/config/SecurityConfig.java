@@ -2,6 +2,7 @@ package com.ai.recipe.auth_service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.slf4j.Logger;
@@ -17,7 +18,9 @@ public class SecurityConfig {
         logger.info("=== SECURITY CONFIG LOADING ===");
 
         http
+            
             .csrf(csrf -> csrf.disable()) // stateless API, disable CSRF
+            .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> {
                 logger.info("Configuring authorization rules");
 
