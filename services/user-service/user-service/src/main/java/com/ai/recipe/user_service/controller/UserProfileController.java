@@ -1,5 +1,6 @@
 package com.ai.recipe.user_service.controller;
 
+import com.ai.recipe.user_service.dto.CreateProfileRequest;
 import com.ai.recipe.user_service.dto.UpdateProfileRequest;
 import com.ai.recipe.user_service.dto.UserProfileResponse;
 import com.ai.recipe.user_service.entity.UserProfile;
@@ -53,6 +54,24 @@ public class UserProfileController {
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("User Service is working!");
     }
+
+    @PostMapping("/create-profile")
+    public ResponseEntity<UserProfileResponse> createProfile(@RequestBody CreateProfileRequest request) {
+        // No token validation, since only Auth service will call this
+        UserProfile profile = profileService.createOrUpdateProfile(
+                request.getAuthUserId(),
+                UpdateProfileRequest.builder()
+                    .fullName(null)        // default empty fields
+                    .bio(null)
+                    .avatarUrl(null)
+                    .preferences("{}")     // maybe an empty JSON
+                    .allergies("{}")
+                    .build()
+        );
+
+        return ResponseEntity.ok(convertToResponse(profile));
+    }
+
 
 
     /**

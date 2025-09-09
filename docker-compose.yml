@@ -32,6 +32,8 @@ services:
       # SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
       # SPRING_DATASOURCE_USERNAME: dev
       # SPRING_DATASOURCE_PASSWORD: dev
+      USER_SERVICE_URL: http://user-service:8081
+      INTERNAL_API_KEY: super-secret-key
       SPRING_REDIS_HOST: redis
       JWT_SECRET: c2VjdXJlLXRvcC1zZWNyZXQta2V5LTI1Ni1iaXRzLXNlY3VyZQ==
 
