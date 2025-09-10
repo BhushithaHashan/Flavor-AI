@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
                 
                 if (request.getRequestURI().equals("/api/user/create-profile")) {
+                    System.out.println("request from auth serviceyooooooo!!!!!!");
                     String secret = request.getHeader("X-Internal-Secret");
                     if (secret == null || !secret.equals(internalApiKey)) {
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");

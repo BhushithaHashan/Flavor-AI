@@ -23,6 +23,8 @@ public class SecurityConfig {
             .authorizeHttpRequests()
             // Allow /test endpoint publicly
             .requestMatchers("/api/user/test").permitAll()
+            .requestMatchers("/api/user/create-profile").permitAll()
+
             // Require authentication for everything else under /api/user/**
             .requestMatchers("/api/user/**").authenticated()
             .anyRequest().permitAll()
