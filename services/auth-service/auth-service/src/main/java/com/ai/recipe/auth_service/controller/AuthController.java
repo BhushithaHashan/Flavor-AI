@@ -1,5 +1,6 @@
 package com.ai.recipe.auth_service.controller;
 
+import com.ai.recipe.auth_service.dto.CreateProfileRequest;
 import com.ai.recipe.auth_service.entity.User;
 import com.ai.recipe.auth_service.model.AuthProvider;
 import com.ai.recipe.auth_service.model.Role;
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.ai.recipe.auth_service.clients.UserServiceClient;
+
 
 import java.util.Map;
 
@@ -27,10 +30,12 @@ public class AuthController {
 
     private final AuthService authService;
     private final JwtUtil jwtUtil;
+    private final UserServiceClient userServiceClient;
 
-    public AuthController(AuthService authService, JwtUtil jwtUtil) {
+    public AuthController(AuthService authService, JwtUtil jwtUtil,UserServiceClient userServiceClient) {
         this.authService = authService;
         this.jwtUtil = jwtUtil;
+        this.userServiceClient = userServiceClient;
     }
 
     @PostMapping("/register")
@@ -43,47 +48,35 @@ public class AuthController {
         String username = req.get("username"); // optional, can be null
 
         try {
+            // Register in Auth DB
             User user = authService.register(email, password, username, Role.USER, AuthProvider.LOCAL);
-            System.out.println("heres the id of the user:"+user.getId());
-            System.out.println("here the email:"+user.getEmail());
-            String token = jwtUtil.generateToken(user.getId(),user.getEmail());
+            logger.info("User registered with id={}, email={}", user.getId(), user.getEmail());
 
-        return ResponseEntity.ok(Map.of(
-            // "id", user.getId(),            
-            "token", token,
-            "username",user.getUsername(),
-            "email", user.getEmail(),
-            "role", user.getRole()
-        ));
 
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
-        }
-    }
+            try {
+                userServiceClient.createProfile(user.getId(),user.getEmail());
+                logger.info("Profile created in User service for userId={}", user.getId());
+            } catch (Exception ex) {
+                logger.error("Failed to create profile for userId={}, rolling back", user.getId(), ex);
+                // rollback auth user if profile creation fails
+                authService.deleteUser(user.getId());
+                throw new RuntimeException("Profile creation failed, registration rolled back.");
+            }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> req) {
-        logger.info("=== LOGIN ENDPOINT HIT ===");
-        logger.info("Login request received: {}", req);
+            // Generate JWT
+            String token = jwtUtil.generateToken(user.getId(), user.getEmail());
 
-        String email = req.get("email");
-        String password = req.get("password");
-
-        try {
-            User user = authService.validateUser(email, password);
-            String token = jwtUtil.generateToken(user.getId(),user.getEmail());
-
+            //Return response
             return ResponseEntity.ok(Map.of(
-                // "id", user.getId(),
-                            
                 "token", token,
-                "username",user.getUsername(),
+                "username", user.getUsername(),
                 "email", user.getEmail(),
                 "role", user.getRole()
             ));
 
         } catch (RuntimeException e) {
-            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+            logger.error("Registration failed: {}", e.getMessage());
+            return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
         }
     }
 

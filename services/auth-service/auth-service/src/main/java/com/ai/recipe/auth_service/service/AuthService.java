@@ -41,7 +41,16 @@ public class AuthService {
                 .filter(u -> encoder.matches(password, u.getPassword()))
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
     }
+
+    // Get username by email (used in validate endpoint)
     public String validateUser(String email){
         return userRepository.findByEmail(email).get().getUsername();
+    }
+
+    // Delete user by ID (rollback support)
+    public void deleteUser(Long userId) {
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+        }
     }
 }
