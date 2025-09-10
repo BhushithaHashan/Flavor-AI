@@ -14,5 +14,5 @@ public class UserProfileResponse {
     private String bio;
     private String avatarUrl;
     private String preferences; // JSON string
-    private String allergies;   // JSON string
+    private String Restrictions;   // JSON string
 }

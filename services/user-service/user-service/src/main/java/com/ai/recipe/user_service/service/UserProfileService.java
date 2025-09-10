@@ -41,7 +41,7 @@ public class UserProfileService {
             profile.setBio(request.getBio());
             profile.setAvatarUrl(request.getAvatarUrl());
             profile.setPreferences(request.getPreferences()); // JSON string
-            profile.setAllergies(request.getAllergies());     // JSON string
+            profile.setRestrictions(request.getRestrictions());     // JSON string
         } else {
             // Create new profile
             profile = UserProfile.builder()
@@ -50,7 +50,7 @@ public class UserProfileService {
                     .bio(request.getBio())
                     .avatarUrl(request.getAvatarUrl())
                     .preferences(request.getPreferences())
-                    .allergies(request.getAllergies())
+                    .Restrictions(request.getRestrictions())
                     .build();
         }
 

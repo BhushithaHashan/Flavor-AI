@@ -28,7 +28,7 @@ public class UserProfile {
     private String preferences; // JSON string for dietary preferences
 
     @Column
-    private String allergies; // JSON string for allergies
+    private String Restrictions; // JSON string for allergies
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

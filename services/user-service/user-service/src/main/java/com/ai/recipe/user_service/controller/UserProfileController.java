@@ -65,7 +65,7 @@ public class UserProfileController {
                     .bio(null)
                     .avatarUrl(null)
                     .preferences("{}")     // maybe an empty JSON
-                    .allergies("{}")
+                    .Restrictions("{}")
                     .build()
         );
 
@@ -100,7 +100,7 @@ public class UserProfileController {
                 .bio(profile.getBio())
                 .avatarUrl(profile.getAvatarUrl())
                 .preferences(profile.getPreferences())
-                .allergies(profile.getAllergies())
+                .Restrictions(profile.getRestrictions())
                 .build();
     }
 }

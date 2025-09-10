@@ -79,6 +79,27 @@ public class AuthController {
             return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
         }
     }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> req) {
+        logger.info("=== LOGIN ENDPOINT HIT ===");
+        String email = req.get("email");
+        String password = req.get("password");
+
+        try {
+            User user = authService.validateUser(email, password);
+            String token = jwtUtil.generateToken(user.getId(), user.getEmail());
+
+            return ResponseEntity.ok(Map.of(
+                "token", token,
+                "username", user.getUsername(),
+                "email", user.getEmail(),
+                "role", user.getRole()
+            ));
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+        }
+    }
 
     @GetMapping("/test")
     public ResponseEntity<String> test() {

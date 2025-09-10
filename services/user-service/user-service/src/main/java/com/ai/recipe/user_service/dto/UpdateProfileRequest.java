@@ -10,5 +10,5 @@ public class UpdateProfileRequest {
     private String bio;
     private String avatarUrl;
     private String preferences; 
-    private String allergies;   
+    private String Restrictions;   
 }
