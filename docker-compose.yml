@@ -80,6 +80,7 @@ services:
       # SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/recipedb
       # SPRING_DATASOURCE_USERNAME: dev
       # SPRING_DATASOURCE_PASSWORD: dev
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
       SPRING_REDIS_HOST: redis
     depends_on:
       postgres:
