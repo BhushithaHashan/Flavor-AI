@@ -33,7 +33,7 @@
             min-height: 100vh;
             color: var(--dark);
             line-height: 1.6;
-            scroll-padding-top: 80px;
+            position: relative;
         }
 
         .container {
@@ -42,173 +42,6 @@
             padding: 0 20px;
         }
 
-        /* Header Styles (same as index) */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 15px 0;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--primary);
-            font-size: 24px;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .logo i {
-            font-size: 28px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        nav {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        nav a {
-            color: var(--dark);
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
-            position: relative;
-            font-size: 16px;
-        }
-
-        nav a:hover {
-            color: var(--primary);
-        }
-
-        nav a:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            transition: var(--transition);
-        }
-
-        nav a:hover:after {
-            width: 100%;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        .user-dropdown {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            width: 200px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: var(--transition);
-            z-index: 1001;
-        }
-
-        .user-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .user-dropdown a {
-            display: block;
-            padding: 12px 20px;
-            color: var(--dark);
-            text-decoration: none;
-            transition: var(--transition);
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        .user-dropdown a:last-child {
-            border-bottom: none;
-        }
-
-        .user-dropdown a:hover {
-            background: var(--light);
-            color: var(--primary);
-        }
-
-        .btn {
-            padding: 10px 22px;
-            border: none;
-            border-radius: var(--radius);
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
-
-        /* Profile Section */
         .profile-section {
             padding: 80px 0 60px;
         }
@@ -237,6 +70,13 @@
             max-width: 1000px;
             margin: 0 auto;
         }
+        
+        @media (max-width: 900px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
 
         .profile-sidebar {
             background: white;
@@ -251,34 +91,18 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
             margin: 0 auto 20px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 48px;
-            font-weight: 600;
-            position: relative;
-            overflow: hidden;
+            background: var(--light-gray);
         }
-
-        .avatar-edit {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .profile-avatar:hover .avatar-edit {
-            opacity: 1;
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .profile-name {
@@ -293,16 +117,17 @@
             margin-bottom: 20px;
         }
 
-        .edit-profile-btn {
-            width: 100%;
-            margin-top: 20px;
-        }
-
         .profile-content {
             background: white;
             border-radius: var(--radius);
             padding: 40px;
             box-shadow: var(--shadow);
+        }
+        
+        @media (max-width: 768px) {
+            .profile-content {
+                padding: 25px;
+            }
         }
 
         .info-section {
@@ -316,53 +141,8 @@
             padding-bottom: 10px;
             border-bottom: 2px solid var(--light-gray);
             font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .info-item {
-            margin-bottom: 15px;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .info-value {
-            color: var(--gray);
-            padding: 10px 0;
-        }
-
-        .list-value {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .list-tag {
-            background: var(--light-gray);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            color: var(--dark);
-        }
-
-        .empty-value {
-            color: var(--light-gray);
-            font-style: italic;
-        }
-
-        /* Form Styles */
         .form-group {
             margin-bottom: 25px;
         }
@@ -388,7 +168,8 @@
         }
 
         .input-with-icon input, 
-        .input-with-icon textarea {
+        .input-with-icon textarea,
+        .input-with-icon select {
             width: 100%;
             padding: 16px 20px 16px 50px;
             border: 2px solid var(--light-gray);
@@ -397,9 +178,10 @@
             transition: var(--transition);
             background: var(--light);
         }
-
+        
         .input-with-icon input:focus, 
-        .input-with-icon textarea:focus {
+        .input-with-icon textarea:focus,
+        .input-with-icon select:focus {
             border-color: var(--secondary);
             outline: none;
             box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
@@ -408,19 +190,10 @@
         textarea {
             min-height: 100px;
             resize: vertical;
+            padding: 16px 20px;
+            padding-left: 50px;
         }
-
-        /* List input styles */
-        .list-input-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .list-input {
-            flex: 1;
-        }
-
+        
         .list-items {
             display: flex;
             flex-wrap: wrap;
@@ -437,7 +210,7 @@
             gap: 8px;
             font-size: 14px;
         }
-
+        
         .remove-item {
             background: none;
             border: none;
@@ -452,20 +225,6 @@
             justify-content: center;
         }
 
-        .add-item-btn {
-            background: var(--secondary);
-            color: white;
-            border: none;
-            border-radius: var(--radius);
-            padding: 10px 15px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .add-item-btn:hover {
-            background: var(--primary);
-        }
-
         .form-actions {
             display: flex;
             gap: 15px;
@@ -475,7 +234,27 @@
             border-top: 1px solid var(--light-gray);
         }
 
-        /* Action buttons */
+        .btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+        
         .btn-secondary {
             background: var(--light-gray);
             color: var(--dark);
@@ -485,893 +264,307 @@
             background: #e0e0e0;
             transform: translateY(-2px);
         }
-
-        /* Hidden state */
-        .hidden {
-            display: none;
+        
+        .request-body-output {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--light-gray);
+            border-radius: var(--radius);
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        /* Mobile menu toggle (same as index) */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            background: transparent;
-            border: none;
+        .request-body-output h3 {
+            margin-top: 0;
+            color: var(--dark);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 60px;
+            left: 60px;
+            font-size: 28px;
+            color: var(--gray);
             cursor: pointer;
-            padding: 0;
-            z-index: 1001;
-        }
-
-        .menu-toggle span {
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            border-radius: 3px;
-            transition: var(--transition);
-            transform-origin: left;
-        }
-
-        /* Footer (same as index) */
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 60px 0 30px;
-            border-top-left-radius: var(--radius);
-            border-top-right-radius: var(--radius);
-            margin-top: 60px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-column h3 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-
-        .footer-column p {
-            margin-bottom: 20px;
-            opacity: 0.8;
-            line-height: 1.7;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            opacity: 0.8;
             transition: var(--transition);
         }
 
-        .footer-links a:hover {
-            opacity: 1;
-            color: var(--secondary);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            transition: var(--transition);
-        }
-
-        .social-links a:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 0.7;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .profile-container {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            
-            .profile-sidebar {
-                text-align: left;
-                display: grid;
-                grid-template-columns: 120px 1fr;
-                gap: 20px;
-                align-items: center;
-            }
-            
-            .profile-avatar {
-                margin: 0;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .menu-toggle {
-                display: flex;
-            }
-            
-            nav {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 280px;
-                height: 100vh;
-                background: white;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transition: var(--transition);
-                box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
-                z-index: 1000;
-                gap: 25px;
-                padding: 20px;
-            }
-            
-            nav.active {
-                right: 0;
-            }
-            
-            .auth-buttons {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .auth-buttons .btn {
-                width: 100%;
-                text-align: center;
-            }
-            
-            .menu-toggle.active span:nth-child(1) {
-                transform: rotate(45deg) translate(4px, -3px);
-                background: var(--primary);
-            }
-            
-            .menu-toggle.active span:nth-child(2) {
-                opacity: 0;
-            }
-            
-            .menu-toggle.active span:nth-child(3) {
-                transform: rotate(-45deg) translate(4px, 3px);
-                background: var(--primary);
-            }
-            
-            .overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                opacity: 0;
-                visibility: hidden;
-                transition: var(--transition);
-                z-index: 999;
-            }
-            
-            .overlay.active {
-                opacity: 1;
-                visibility: visible;
-            }
-            
-            .profile-content {
-                padding: 25px;
-            }
-            
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .profile-sidebar {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .profile-avatar {
-                margin: 0 auto;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-actions {
-                flex-direction: column;
-            }
-            
-            .list-input-container {
-                flex-direction: column;
-            }
+        .close-button:hover {
+            color: var(--dark);
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container header-container">
-            <a href="index.html" class="logo">
-                <i class="fas fa-utensils"></i>
-                FlavorAI
-            </a>
-            
-            <button class="menu-toggle" id="menu-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <nav id="main-nav">
-                <a href="index.html">Home</a>
-                <a href="#">How It Works</a>
-                <a href="#">Recipes</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-                
-                <div class="auth-buttons" id="auth-buttons">
-                    <!-- Populated by JavaScript -->
-                </div>
-            </nav>
-            
-            <div class="overlay" id="overlay"></div>
-        </div>
-    </header>
+    <a href="index.html" class="close-button" title="Go back">
+        <i class="fas fa-arrow-left"></i>
+    </a>
 
-    <!-- Profile Section -->
     <main class="container">
         <section class="profile-section">
             <div class="profile-header">
-                <h1>My Profile</h1>
-                <p>Manage your personal information and preferences</p>
+                <h1>Update Your Profile</h1>
+                <p>Manage your personal information and preferences.</p>
             </div>
             
             <div class="profile-container">
                 <div class="profile-sidebar">
                     <div class="profile-avatar">
-                        <span id="avatar-text">JD</span>
-                        <div class="avatar-edit">Change Photo</div>
+                        <img id="avatar-img" src="data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3e%3crect width='100%25' height='100%25' fill='%23ccc'/%3e%3c/svg%3e" alt="User Avatar">
                     </div>
                     <div class="profile-info">
-                        <div class="profile-name" id="profile-fullname">John Doe</div>
-
+                        <div class="profile-name" id="profile-fullname"></div>
+                        <div class="profile-email"></div>
                     </div>
                 </div>
                 
                 <div class="profile-content">
-                    <!-- Personal Information Section -->
-                    <div class="info-section" id="personal-info-section">
-                        <h3>
-                            Personal Information
-                            <button class="btn btn-outline edit-section-btn" data-section="personal">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                        </h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <span class="info-label">Full Name</span>
-                                <div class="info-value" id="info-fullname">John Doe</div>
-                            </div>
-                            <div class="info-item full-width">
-                                <span class="info-label">Bio</span>
-                                <div class="info-value" id="info-bio">Food enthusiast and home chef passionate about exploring new cuisines.</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Preferences Section -->
-                    <div class="info-section" id="preferences-section">
-                        <h3>
-                            Preferences
-                            <button class="btn btn-outline edit-section-btn" data-section="preferences">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                        </h3>
-                        <div class="info-grid">
-                            <div class="info-item full-width">
-                                <span class="info-label">Favorite Cuisines</span>
-                                <div class="list-value" id="info-cuisines">
-                                    <span class="list-tag">Italian</span>
-                                    <span class="list-tag">Mexican</span>
-                                    <span class="list-tag">Japanese</span>
-                                </div>
-                            </div>
-                            <div class="info-item full-width">
-                                <span class="info-label">Dietary Preferences</span>
-                                <div class="list-value" id="info-dietary">
-                                    <span class="list-tag">Vegetarian</span>
-                                    <span class="list-tag">Gluten-Free</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Allergies Section -->
-                    <div class="info-section" id="allergies-section">
-                        <h3>
-                            Allergies & Restrictions
-                            <button class="btn btn-outline edit-section-btn" data-section="allergies">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Allergies</span>
-                            <div class="list-value" id="info-allergies">
-                                <span class="list-tag">Shellfish</span>
-                                <span class="list-tag">Peanuts</span>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Ingredients to Avoid</span>
-                            <div class="list-value" id="info-avoid">
-                                <span class="list-tag">MSG</span>
-                                <span class="list-tag">Artificial sweeteners</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Edit Forms (Hidden by default) -->
-                    <form id="personal-info-form" class="hidden">
-                        <h3>Edit Personal Information</h3>
+                    <form id="preferences-form">
+                        <h3>Personal Information</h3>
                         <div class="form-group">
-                            <label for="edit-fullname">Full Name</label>
+                            <label for="full-name">Full Name</label>
                             <div class="input-with-icon">
                                 <i class="fas fa-user"></i>
-                                <input type="text" id="edit-fullname" value="John Doe">
+                                <input type="text" id="full-name" placeholder="Enter your full name">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="edit-bio">Bio</label>
+                            <label for="bio">Bio</label>
                             <div class="input-with-icon">
                                 <i class="fas fa-pencil-alt"></i>
-                                <textarea id="edit-bio">Food enthusiast and home chef passionate about exploring new cuisines.</textarea>
+                                <textarea id="bio" rows="4" placeholder="Tell us a little about yourself..."></textarea>
                             </div>
                         </div>
+
+                        ---
+
+                        <h3>Cuisine & Dietary Preferences</h3>
+                        <div class="form-group">
+                            <label for="cuisine">Cuisine Preferences</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-utensils"></i>
+                                <select id="cuisine">
+                                    <option value="">Any Cuisine</option>
+                                    <option value="italian">Italian</option>
+                                    <option value="mexican">Mexican</option>
+                                    <option value="chinese">Chinese</option>
+                                    <option value="indian">Indian</option>
+                                    <option value="french">French</option>
+                                    <option value="thai">Thai</option>
+                                    <option value="japanese">Japanese</option>
+                                    <option value="mediterranean">Mediterranean</option>
+                                </select>
+                            </div>
+                            <div class="list-items" id="selected-cuisines"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dietary">Dietary Restrictions</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-leaf"></i>
+                                <select id="dietary">
+                                    <option value="">No Restrictions</option>
+                                    <option value="vegetarian">Vegetarian</option>
+                                    <option value="vegan">Vegan</option>
+                                    <option value="gluten-free">Gluten-Free</option>
+                                    <option value="dairy-free">Dairy-Free</option>
+                                    <option value="keto">Keto</option>
+                                    <option value="paleo">Paleo</option>
+                                </select>
+                            </div>
+                            <div class="list-items" id="selected-dietary"></div>
+                        </div>
+                        
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary cancel-edit-btn" data-section="personal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" id="cancel-button" class="btn btn-secondary">Cancel</button>
+                            <button type="button" id="save-button" class="btn btn-primary">Save Changes</button>
                         </div>
                     </form>
                     
-                    <form id="preferences-form" class="hidden">
-                        <h3>Edit Preferences</h3>
-                        <div class="form-group">
-                            <label>Favorite Cuisines</label>
-                            <div class="list-input-container">
-                                <div class="input-with-icon list-input">
-                                    <i class="fas fa-globe"></i>
-                                    <input type="text" id="new-cuisine" placeholder="Add a cuisine">
-                                </div>
-                                <button type="button" class="add-item-btn" id="add-cuisine-btn">Add</button>
-                            </div>
-                            <div class="list-items" id="cuisines-list">
-                                <!-- Dynamic list items will be added here -->
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Dietary Preferences</label>
-                            <div class="list-input-container">
-                                <div class="input-with-icon list-input">
-                                    <i class="fas fa-leaf"></i>
-                                    <input type="text" id="new-dietary" placeholder="Add dietary preference">
-                                </div>
-                                <button type="button" class="add-item-btn" id="add-dietary-btn">Add</button>
-                            </div>
-                            <div class="list-items" id="dietary-list">
-                                <!-- Dynamic list items will be added here -->
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary cancel-edit-btn" data-section="preferences">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </form>
-                    
-                    <form id="allergies-form" class="hidden">
-                        <h3>Edit Allergies & Restrictions</h3>
-                        <div class="form-group">
-                            <label>Allergies</label>
-                            <div class="list-input-container">
-                                <div class="input-with-icon list-input">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <input type="text" id="new-allergy" placeholder="Add an allergy">
-                                </div>
-                                <button type="button" class="add-item-btn" id="add-allergy-btn">Add</button>
-                            </div>
-                            <div class="list-items" id="allergies-list">
-                                <!-- Dynamic list items will be added here -->
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Ingredients to Avoid</label>
-                            <div class="list-input-container">
-                                <div class="input-with-icon list-input">
-                                    <i class="fas fa-ban"></i>
-                                    <input type="text" id="new-avoid" placeholder="Add ingredient to avoid">
-                                </div>
-                                <button type="button" class="add-item-btn" id="add-avoid-btn">Add</button>
-                            </div>
-                            <div class="list-items" id="avoid-list">
-                                <!-- Dynamic list items will be added here -->
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary cancel-edit-btn" data-section="allergies">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </form>
+                    <div class="request-body-output" id="output"></div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>FlavorAI</h3>
-                    <p>Transforming ingredients into delicious recipes with the power of artificial intelligence.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-pinterest"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="#">How It Works</a></li>
-                        <li><a href="#">Recipes</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Resources</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Cooking Tips</a></li>
-                        <li><a href="#">Dietary Guides</a></li>
-                        <li><a href="#">Recipe Collections</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">FAQs</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Newsletter</h3>
-                    <p>Subscribe to our newsletter to get weekly recipe ideas and cooking tips.</p>
-                    <form>
-                        <div class="input-with-icon">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" placeholder="Your email address">
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Subscribe</button>
-                    </form>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                <p>&copy; 2023 FlavorAI. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const authButtonsContainer = document.getElementById('auth-buttons');
-        const menuToggle = document.getElementById('menu-toggle');
-        const mainNav = document.getElementById('main-nav');
-        const overlay = document.getElementById('overlay');
+        document.addEventListener('DOMContentLoaded', async () => {
+            const fullNameInput = document.getElementById('full-name');
+            const bioTextarea = document.getElementById('bio');
+            const cuisineSelect = document.getElementById('cuisine');
+            const dietarySelect = document.getElementById('dietary');
+            const selectedCuisinesContainer = document.getElementById('selected-cuisines');
+            const selectedDietaryContainer = document.getElementById('selected-dietary');
+            const saveButton = document.getElementById('save-button');
+            const cancelButton = document.getElementById('cancel-button');
+            const outputDiv = document.getElementById('output');
+            const avatarImg = document.getElementById('avatar-img');
+            const profileFullName = document.getElementById('profile-fullname');
 
-        // Authentication functions
-        async function checkAuthState() {
-            const token = localStorage.getItem('jwtToken');
-            console.log("Token from localStorage:", token);
+            const API_URL_GET = "http://localhost:8080/api/user/profile";
+            const API_URL_PUT = "http://localhost:8080/api/user/profile";
+            const TOKEN = localStorage.getItem('jwtToken');
 
-            if (!token) {
-                // window.location.href = 'new-sign-up.html';
-                // return;
-                console.log('hello ');
-            }
+            let initialData = {};
 
-            try {
-                const res = await fetch('http://localhost:8080/api/auth/validate', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+            // Function to fetch user data from the API
+            const fetchUserData = async () => {
+                if (!TOKEN) {
+                    outputDiv.innerHTML = `<h3>Error: No token found.</h3><p>Please log in to view your profile.</p>`;
+                    return;
+                }
+
+                try {
+                    const response = await fetch(API_URL_GET, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${TOKEN}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                });
 
-                if (!res.ok) throw new Error('Invalid token');
-
-                const data = await res.json();
-                showUserMenu(data.username || data.email);
-                loadUserProfile(token);
-            } catch (err) {
-                console.error('Token invalid or expired:', err);
-                // localStorage.removeItem('jwtToken');
-                // window.location.href = 'new-sign-up.html';
-            }
-        }
-
-        function showUserMenu(email) {
-            authButtonsContainer.innerHTML = `
-                <div class="user-menu" id="user-menu">
-                    <div class="user-avatar">${email.charAt(0).toUpperCase()}</div>
-                    <span>${email}</span>
-                    <div class="user-dropdown" id="user-dropdown">
-                        <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
-                        <a href="#"><i class="fas fa-heart"></i> Saved Recipes</a>
-                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
-                        <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                    </div>
-                </div>
-            `;
-
-            const userMenu = document.getElementById('user-menu');
-            const userDropdown = document.getElementById('user-dropdown');
-            const logoutBtn = document.getElementById('logout-btn');
-
-            userMenu.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userDropdown.classList.toggle('active');
-            });
-
-            logoutBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('jwtToken');
-                window.location.href = 'index.html';
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!userMenu.contains(e.target)) {
-                    userDropdown.classList.remove('active');
+                    initialData = await response.json();
+                    populateForm(initialData);
+                } catch (error) {
+                    console.error("Failed to fetch user data:", error);
+                    outputDiv.innerHTML = `<h3>Error fetching profile data</h3><p>${error.message}</p>`;
                 }
-            });
-        }
+            };
 
-        // Mobile menu functionality
-        menuToggle.addEventListener('click', function() {
-            menuToggle.classList.toggle('active');
-            mainNav.classList.toggle('active');
-            overlay.classList.toggle('active');
-            document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
-        });
+            function populateForm(data) {
+                fullNameInput.value = data.fullName || '';
+                bioTextarea.value = data.bio || '';
+                profileFullName.textContent = data.fullName || 'User Profile';
+                avatarImg.src = data.avatarUrl || 'data:image/svg+xml;charset=UTF-8,%3csvg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"%3e%3crect width="100%25" height="100%25" fill="%23ccc"/%3e%3c/svg%3e';
 
-        overlay.addEventListener('click', function() {
-            menuToggle.classList.remove('active');
-            mainNav.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-        });
+                const preferencesString = data.preferences || '';
+                const restrictionsString = data.restrictions || '';
 
-        // Profile editing functionality
-        const infoSections = {
-            personal: document.getElementById('personal-info-section'),
-            preferences: document.getElementById('preferences-section'),
-            allergies: document.getElementById('allergies-section')
-        };
-        
-        const editForms = {
-            personal: document.getElementById('personal-info-form'),
-            preferences: document.getElementById('preferences-form'),
-            allergies: document.getElementById('allergies-form')
-        };
+                selectedCuisinesContainer.innerHTML = '';
+                selectedDietaryContainer.innerHTML = '';
+                
+                selectedItems.cuisine.clear();
+                selectedItems.dietary.clear();
 
-        // List management
-        const listData = {
-            cuisines: ['Italian', 'Mexican', 'Japanese'],
-            dietary: ['Vegetarian', 'Gluten-Free'],
-            allergies: ['Shellfish', 'Peanuts'],
-            avoid: ['MSG', 'Artificial sweeteners']
-        };
-
-        // Initialize list displays
-        function initializeLists() {
-            // Initialize cuisine list
-            const cuisinesList = document.getElementById('cuisines-list');
-            cuisinesList.innerHTML = '';
-            listData.cuisines.forEach(cuisine => {
-                addListItem(cuisinesList, cuisine, 'cuisines');
-            });
-
-            // Initialize dietary list
-            const dietaryList = document.getElementById('dietary-list');
-            dietaryList.innerHTML = '';
-            listData.dietary.forEach(item => {
-                addListItem(dietaryList, item, 'dietary');
-            });
-
-            // Initialize allergies list
-            const allergiesList = document.getElementById('allergies-list');
-            allergiesList.innerHTML = '';
-            listData.allergies.forEach(allergy => {
-                addListItem(allergiesList, allergy, 'allergies');
-            });
-
-            // Initialize avoid list
-            const avoidList = document.getElementById('avoid-list');
-            avoidList.innerHTML = '';
-            listData.avoid.forEach(item => {
-                addListItem(avoidList, item, 'avoid');
-            });
-        }
-
-        function addListItem(container, text, type) {
-            const item = document.createElement('div');
-            item.className = 'list-item';
-            item.innerHTML = `
-                ${text}
-                <button class="remove-item" type="button">&times;</button>
-            `;
-            
-            item.querySelector('.remove-item').addEventListener('click', function() {
-                item.remove();
-                const index = listData[type].indexOf(text);
-                if (index > -1) {
-                    listData[type].splice(index, 1);
-                }
-                updateListDisplay(type);
-            });
-            
-            container.appendChild(item);
-        }
-
-        function updateListDisplay(type) {
-            const displayElement = document.getElementById(`info-${type}`);
-            if (displayElement) {
-                displayElement.innerHTML = '';
-                listData[type].forEach(item => {
-                    const tag = document.createElement('span');
-                    tag.className = 'list-tag';
-                    tag.textContent = item;
-                    displayElement.appendChild(tag);
-                });
-            }
-        }
-
-        // Edit section buttons
-        document.querySelectorAll('.edit-section-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const section = this.dataset.section;
-                toggleEditMode(section, true);
-            });
-        });
-
-        // Cancel buttons
-        document.querySelectorAll('.cancel-edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const section = this.dataset.section;
-                toggleEditMode(section, false);
-            });
-        });
-
-        // Add item buttons
-        document.getElementById('add-cuisine-btn').addEventListener('click', function() {
-            const input = document.getElementById('new-cuisine');
-            const value = input.value.trim();
-            if (value && !listData.cuisines.includes(value)) {
-                listData.cuisines.push(value);
-                const list = document.getElementById('cuisines-list');
-                addListItem(list, value, 'cuisines');
-                input.value = '';
-            }
-        });
-
-        document.getElementById('add-dietary-btn').addEventListener('click', function() {
-            const input = document.getElementById('new-dietary');
-            const value = input.value.trim();
-            if (value && !listData.dietary.includes(value)) {
-                listData.dietary.push(value);
-                const list = document.getElementById('dietary-list');
-                addListItem(list, value, 'dietary');
-                input.value = '';
-            }
-        });
-
-        document.getElementById('add-allergy-btn').addEventListener('click', function() {
-            const input = document.getElementById('new-allergy');
-            const value = input.value.trim();
-            if (value && !listData.allergies.includes(value)) {
-                listData.allergies.push(value);
-                const list = document.getElementById('allergies-list');
-                addListItem(list, value, 'allergies');
-                input.value = '';
-            }
-        });
-
-        document.getElementById('add-avoid-btn').addEventListener('click', function() {
-            const input = document.getElementById('new-avoid');
-            const value = input.value.trim();
-            if (value && !listData.avoid.includes(value)) {
-                listData.avoid.push(value);
-                const list = document.getElementById('avoid-list');
-                addListItem(list, value, 'avoid');
-                input.value = '';
-            }
-        });
-
-        function toggleEditMode(section, showForm = true) {
-            infoSections[section].classList.toggle('hidden', showForm);
-            editForms[section].classList.toggle('hidden', !showForm);
-        }
-
-        // Form submissions
-        editForms.personal.onsubmit = (e) => handleFormSubmit(e, 'personal');
-        editForms.preferences.onsubmit = (e) => handleFormSubmit(e, 'preferences');
-        editForms.allergies.onsubmit = (e) => handleFormSubmit(e, 'allergies');
-
-        async function handleFormSubmit(e, section) {
-            e.preventDefault();
-            const token = localStorage.getItem('jwtToken');
-            
-            const updateData = {};
-
-            switch(section) {
-                case 'personal':
-                    updateData.fullName = document.getElementById('edit-fullname').value;
-                    updateData.bio = document.getElementById('edit-bio').value;
-                    break;
-                case 'preferences':
-                    updateData.preferences = JSON.stringify({
-                        cuisines: listData.cuisines,
-                        dietary: listData.dietary
+                if (preferencesString) {
+                    const preferencesArray = preferencesString.split(',');
+                    preferencesArray.forEach(value => {
+                        const option = cuisineSelect.querySelector(`option[value="${value.trim()}"]`);
+                        if (option) {
+                            const text = option.textContent;
+                            selectedItems.cuisine.add(value.trim());
+                            selectedCuisinesContainer.appendChild(createSelectedItem(text, value.trim(), 'cuisine'));
+                        }
                     });
-                    break;
-                case 'allergies':
-                    updateData.allergies = JSON.stringify({
-                        allergies: listData.allergies,
-                        avoid: listData.avoid
-                    });
-                    break;
-            }
-
-            try {
-                const response = await fetch('http://localhost:8080/api/user/profile', {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(updateData)
-                });
-
-                if (response.ok) {
-                    const updatedProfile = await response.json();
-                    updateProfileDisplay(updatedProfile);
-                    toggleEditMode(section, false);
-                    alert('Profile updated successfully!');
-                } else {
-                    throw new Error('Failed to update profile');
                 }
-            } catch (error) {
-                console.error('Error updating profile:', error);
-                alert('Error updating profile. Please try again.');
-            }
-        }
 
-        async function loadUserProfile(token) {
-            try {
-                const response = await fetch('http://localhost:8080/api/user/profile', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                if (restrictionsString) {
+                    const restrictionsArray = restrictionsString.split(',');
+                    restrictionsArray.forEach(value => {
+                        const option = dietarySelect.querySelector(`option[value="${value.trim()}"]`);
+                        if (option) {
+                            const text = option.textContent;
+                            selectedItems.dietary.add(value.trim());
+                            selectedDietaryContainer.appendChild(createSelectedItem(text, value.trim(), 'dietary'));
+                        }
+                    });
+                }
+            }
+
+            const selectedItems = {
+                cuisine: new Set(),
+                dietary: new Set()
+            };
+
+            function createSelectedItem(text, value, type) {
+                const item = document.createElement('span');
+                item.className = 'list-item';
+                item.textContent = text;
+                item.dataset.value = value;
+                item.dataset.type = type;
+                
+                const closeMark = document.createElement('button');
+                closeMark.className = 'remove-item';
+                closeMark.innerHTML = '<i class="fas fa-times"></i>';
+                closeMark.onclick = () => {
+                    selectedItems[type].delete(value);
+                    item.remove();
+                };
+
+                item.appendChild(closeMark);
+                return item;
+            }
+
+            function handleSelection(selectElement, containerElement, type) {
+                const value = selectElement.value;
+                const text = selectElement.options[selectElement.selectedIndex].text;
+                
+                if (value && !selectedItems[type].has(value)) {
+                    selectedItems[type].add(value);
+                    containerElement.appendChild(createSelectedItem(text, value, type));
+                }
+                selectElement.value = ""; 
+            }
+
+            cuisineSelect.addEventListener('change', () => handleSelection(cuisineSelect, selectedCuisinesContainer, 'cuisine'));
+            dietarySelect.addEventListener('change', () => handleSelection(dietarySelect, selectedDietaryContainer, 'dietary'));
+
+            saveButton.addEventListener('click', async () => {
+                if (!TOKEN) {
+                    outputDiv.innerHTML = `<h3>Error: No token found.</h3><p>Please log in to save your profile.</p>`;
+                    return;
+                }
+
+                const requestBody = {
+                    "fullName": fullNameInput.value,
+                    "bio": bioTextarea.value,
+                    "avatarUrl": avatarImg.src, 
+                    "preferences": Array.from(selectedItems.cuisine).join(','),
+                    "restrictions": Array.from(selectedItems.dietary).join(',')
+                };
+
+                try {
+                    const response = await fetch(API_URL_PUT, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${TOKEN}`
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                });
 
-                if (response.ok) {
-                    const profile = await response.json();
-                    updateProfileDisplay(profile);
-                } else {
-                    // If no profile exists, use default data
-                    console.log('No profile found, using default data');
-                    updateProfileDisplay({
-                        fullName: 'John Doe',
-                        bio: 'Food enthusiast and home chef passionate about exploring new cuisines.',
-                        preferences: JSON.stringify({
-                            cuisines: ['Italian', 'Mexican', 'Japanese'],
-                            dietary: ['Vegetarian', 'Gluten-Free']
-                        }),
-                        allergies: JSON.stringify({
-                            allergies: ['Shellfish', 'Peanuts'],
-                            avoid: ['MSG', 'Artificial sweeteners']
-                        })
-                    });
+                    const result = await response.json();
+                    
+                    outputDiv.innerHTML = `
+                        <h3>Profile Updated Successfully!</h3>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    `;
+                    // Update initial data with the saved data for "cancel" button
+                    initialData = requestBody;
+                } catch (error) {
+                    console.error("Failed to save user data:", error);
+                    outputDiv.innerHTML = `<h3>Error saving profile data</h3><p>${error.message}</p>`;
                 }
-            } catch (error) {
-                console.error('Error loading profile:', error);
-            }
-        }
+            });
 
-        function updateProfileDisplay(profile) {
-            // Update personal info
-            if (profile.fullName) {
-                document.getElementById('profile-fullname').textContent = profile.fullName;
-                document.getElementById('info-fullname').textContent = profile.fullName;
-                document.getElementById('edit-fullname').value = profile.fullName;
-                document.getElementById('avatar-text').textContent = profile.fullName.split(' ').map(n => n[0]).join('').toUpperCase();
-            }
-            
-            if (profile.bio) {
-                document.getElementById('info-bio').textContent = profile.bio;
-                document.getElementById('edit-bio').value = profile.bio;
-            }
+            cancelButton.addEventListener('click', () => {
+                populateForm(initialData);
+                outputDiv.innerHTML = '';
+            });
 
-            // Update preferences
-            if (profile.preferences) {
-                const prefs = typeof profile.preferences === 'string' ? 
-                    JSON.parse(profile.preferences) : profile.preferences;
-                
-                if (prefs.cuisines && Array.isArray(prefs.cuisines)) {
-                    listData.cuisines = prefs.cuisines;
-                    updateListDisplay('cuisines');
-                }
-                
-                if (prefs.dietary && Array.isArray(prefs.dietary)) {
-                    listData.dietary = prefs.dietary;
-                    updateListDisplay('dietary');
-                }
-            }
-
-            // Update allergies
-            if (profile.allergies) {
-                const allergies = typeof profile.allergies === 'string' ? 
-                    JSON.parse(profile.allergies) : profile.allergies;
-                
-                if (allergies.allergies && Array.isArray(allergies.allergies)) {
-                    listData.allergies = allergies.allergies;
-                    updateListDisplay('allergies');
-                }
-                
-                if (allergies.avoid && Array.isArray(allergies.avoid)) {
-                    listData.avoid = allergies.avoid;
-                    updateListDisplay('avoid');
-                }
-            }
-
-            // Initialize lists for editing
-            initializeLists();
-        }
-
-        // Initialize the page
-        initializeLists();
-        checkAuthState();
-    });
+            fetchUserData();
+        });
     </script>
 </body>
 </html>

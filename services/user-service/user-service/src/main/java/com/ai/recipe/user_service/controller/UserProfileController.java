@@ -64,8 +64,8 @@ public class UserProfileController {
                     .fullName(null)        // default empty fields
                     .bio(null)
                     .avatarUrl(null)
-                    .preferences("{}")     // maybe an empty JSON
-                    .Restrictions("{}")
+                    .preferences(null)     // maybe an empty JSON
+                    .Restrictions(null)
                     .build()
         );
 
