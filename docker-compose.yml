@@ -74,23 +74,23 @@ services:
       timeout: 2s
       retries: 10
 
-  # recipe-service:
-  #   build: ./services/recipe-service
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/recipedb
-  #     SPRING_DATASOURCE_USERNAME: dev
-  #     SPRING_DATASOURCE_PASSWORD: dev
-  #     SPRING_REDIS_HOST: redis
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health || exit 1"]
-  #     interval: 5s
-  #     timeout: 2s
-  #     retries: 10
+  recipe-service:
+    build: ./services/recipe-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/recipedb
+      SPRING_DATASOURCE_USERNAME: dev
+      SPRING_DATASOURCE_PASSWORD: dev
+      SPRING_REDIS_HOST: redis
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health || exit 1"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
 
   nginx:
     image: nginx:stable

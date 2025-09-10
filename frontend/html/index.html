@@ -668,10 +668,66 @@
                 font-size: 1.8rem;
             }
         }
+        /* New CSS for Multi-Select UI */
+        .selected-items-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .selected-item {
+            background-color: var(--secondary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .selected-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .remove-item {
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+
+        .remove-item:hover {
+            transform: scale(1.2);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .dropdown-item:hover {
+            background: var(--light-gray);
+        }
     </style>
 </head>
 <body>
-    <!-- Improved Header with Modern Navigation -->
     <header>
         <div class="container header-container">
             <a href="#" class="logo">
@@ -693,8 +749,7 @@
                 <a href="#">Contact</a>
                 
                 <div class="auth-buttons" id="auth-buttons">
-                    <!-- This will be populated by JavaScript based on login state -->
-                </div>
+                    </div>
             </nav>
             
             <div class="overlay" id="overlay"></div>
@@ -702,7 +757,6 @@
     </header>
 
     <main class="container">
-        <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
                 <h1>Transform Your Ingredients Into <span>Delicious Recipes</span></h1>
@@ -717,7 +771,6 @@
             </div>
         </section>
 
-        <!-- Recipe Generator Form -->
         <section class="recipe-generator" id="recipe-generator">
             <div class="section-title">
                 <h2>Generate Your Perfect Recipe</h2>
@@ -738,18 +791,10 @@
                         <label for="cuisine">Cuisine Preference</label>
                         <div class="input-with-icon">
                             <i class="fas fa-globe"></i>
-                            <select id="cuisine">
-                                <option value="">Any Cuisine</option>
-                                <option value="italian">Italian</option>
-                                <option value="mexican">Mexican</option>
-                                <option value="chinese">Chinese</option>
-                                <option value="indian">Indian</option>
-                                <option value="french">French</option>
-                                <option value="thai">Thai</option>
-                                <option value="japanese">Japanese</option>
-                                <option value="mediterranean">Mediterranean</option>
-                            </select>
+                            <input type="text" id="cuisine-input" placeholder="Select cuisines..." readonly>
+                            <input type="hidden" id="cuisine" name="cuisine">
                         </div>
+                        <div class="selected-items-container" id="selected-cuisines-container"></div>
                     </div>
                     
                     <div class="form-group">
@@ -771,16 +816,10 @@
                         <label for="dietary">Dietary Restrictions</label>
                         <div class="input-with-icon">
                             <i class="fas fa-leaf"></i>
-                            <select id="dietary">
-                                <option value="">No Restrictions</option>
-                                <option value="vegetarian">Vegetarian</option>
-                                <option value="vegan">Vegan</option>
-                                <option value="gluten-free">Gluten-Free</option>
-                                <option value="dairy-free">Dairy-Free</option>
-                                <option value="keto">Keto</option>
-                                <option value="paleo">Paleo</option>
-                            </select>
+                            <input type="text" id="dietary-input" placeholder="Select restrictions..." readonly>
+                            <input type="hidden" id="dietary" name="dietary">
                         </div>
+                        <div class="selected-items-container" id="selected-dietary-container"></div>
                     </div>
                     
                     <div class="form-group full-width">
@@ -801,7 +840,6 @@
             </form>
         </section>
 
-        <!-- Features Section -->
         <section class="features">
             <div class="feature-card">
                 <div class="feature-icon">
@@ -829,7 +867,6 @@
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -886,41 +923,74 @@
     </footer>
 
     <script>
-    console.log("Script loaded");
-
     document.addEventListener('DOMContentLoaded', function() {
         const authButtonsContainer = document.getElementById('auth-buttons');
         const menuToggle = document.getElementById('menu-toggle');
         const mainNav = document.getElementById('main-nav');
         const overlay = document.getElementById('overlay');
+        const cuisineInput = document.getElementById('cuisine-input');
+        const dietaryInput = document.getElementById('dietary-input');
+        const cuisineHiddenInput = document.getElementById('cuisine');
+        const dietaryHiddenInput = document.getElementById('dietary');
+        const selectedCuisinesContainer = document.getElementById('selected-cuisines-container');
+        const selectedDietaryContainer = document.getElementById('selected-dietary-container');
+
+        const cuisineOptions = ["Italian", "Mexican", "Chinese", "Indian", "French", "Thai", "Japanese", "Mediterranean"];
+        const dietaryOptions = ["Vegetarian", "Vegan", "Gluten-Free", "Dairy-Free", "Keto", "Paleo"];
 
         // ------------------ AUTH FUNCTIONS ------------------
         async function checkAuthState() {
-            console.log("checkAuthState called");
-            const token = localStorage.getItem('jwtToken'); // <-- fixed key
-            console.log("Token from localStorage:", token);
-
+            const token = localStorage.getItem('jwtToken');
             if (!token) {
                 showAuthButtons();
                 return;
             }
-
             try {
                 const res = await fetch('http://localhost:8080/api/auth/validate', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-
                 if (!res.ok) throw new Error('Invalid token');
-
                 const data = await res.json();
-                console.log("Validation response:", data);
-                showUserMenu(data.username); // use data.username if available
+                showUserMenu(data.username);
+                fetchAndPopulatePreferences(); // Fetch preferences if logged in
             } catch (err) {
-                console.error('Token invalid or expired:', err);
                 localStorage.removeItem('jwtToken');
                 showAuthButtons();
+            }
+        }
+
+        async function fetchAndPopulatePreferences() {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) return;
+            try {
+                const response = await fetch('http://localhost:8080/api/user/profile', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                
+                // Populate the multi-select fields with data from the API
+                if (data.preferences) {
+                    const prefs = data.preferences.split(',').map(p => p.trim());
+                    prefs.forEach(p => {
+                        const capitalizedPref = p.charAt(0).toUpperCase() + p.slice(1);
+                        if (cuisineOptions.includes(capitalizedPref)) {
+                            addItem(capitalizedPref, selectedCuisinesContainer, cuisineHiddenInput);
+                        }
+                    });
+                }
+                if (data.restrictions) {
+                    const restrs = data.restrictions.split(',').map(r => r.trim());
+                    restrs.forEach(r => {
+                        const capitalizedRestr = r.charAt(0).toUpperCase() + r.slice(1);
+                        if (dietaryOptions.includes(capitalizedRestr)) {
+                            addItem(capitalizedRestr, selectedDietaryContainer, dietaryHiddenInput);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Failed to fetch user preferences:", error);
             }
         }
 
@@ -937,22 +1007,18 @@
                     </div>
                 </div>
             `;
-
             const userMenu = document.getElementById('user-menu');
             const userDropdown = document.getElementById('user-dropdown');
             const logoutBtn = document.getElementById('logout-btn');
-
             userMenu.addEventListener('click', function(e) {
                 e.stopPropagation();
                 userDropdown.classList.toggle('active');
             });
-
             logoutBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 localStorage.removeItem('jwtToken');
                 showAuthButtons();
             });
-
             document.addEventListener('click', function(e) {
                 if (!userMenu.contains(e.target)) {
                     userDropdown.classList.remove('active');
@@ -965,11 +1031,9 @@
                 <button class="btn btn-outline" id="signin-btn">Sign In</button>
                 <button class="btn btn-primary" id="signup-btn">Sign Up</button>
             `;
-
             document.getElementById('signin-btn').addEventListener('click', function() {
                 window.location.href = 'new-sign-up.html'; // login page
             });
-
             document.getElementById('signup-btn').addEventListener('click', function() {
                 window.location.href = 'new-sign-up.html'; // signup page
             });
@@ -982,7 +1046,6 @@
             overlay.classList.toggle('active');
             document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
         });
-
         overlay.addEventListener('click', function() {
             menuToggle.classList.remove('active');
             mainNav.classList.remove('active');
@@ -990,9 +1053,69 @@
             document.body.style.overflow = '';
         });
 
-        // ------------------ RECIPE FORM ------------------
+        // ------------------ RECIPE FORM MULTI-SELECT ------------------
+        function setupMultiSelect(inputEl, hiddenInputEl, containerEl, options) {
+            const dropdown = document.createElement('div');
+            dropdown.classList.add('dropdown-menu');
+            options.forEach(option => {
+                const item = document.createElement('div');
+                item.classList.add('dropdown-item');
+                item.textContent = option;
+                item.addEventListener('click', () => {
+                    addItem(option, containerEl, hiddenInputEl);
+                    dropdown.style.display = 'none';
+                });
+                dropdown.appendChild(item);
+            });
+            document.body.appendChild(dropdown);
+            
+            function positionDropdown() {
+                const rect = inputEl.getBoundingClientRect();
+                dropdown.style.top = `${rect.bottom + window.scrollY}px`;
+                dropdown.style.left = `${rect.left + window.scrollX}px`;
+                dropdown.style.width = `${rect.width}px`;
+                dropdown.style.display = 'block';
+            }
+            inputEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.dropdown-menu').forEach(d => d.style.display = 'none');
+                positionDropdown();
+            });
+            document.addEventListener('click', (e) => {
+                if (!inputEl.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+
+        function addItem(value, containerEl, hiddenInputEl) {
+            const existingItems = Array.from(containerEl.querySelectorAll('.selected-item')).map(el => el.textContent.replace('×', '').trim());
+            if (existingItems.includes(value)) return;
+
+            const item = document.createElement('div');
+            item.classList.add('selected-item');
+            item.innerHTML = `<span>${value}</span><span class="remove-item">&times;</span>`;
+            item.querySelector('.remove-item').addEventListener('click', () => {
+                item.remove();
+                updateHiddenInput(containerEl, hiddenInputEl);
+            });
+            containerEl.appendChild(item);
+            updateHiddenInput(containerEl, hiddenInputEl);
+        }
+
+        function updateHiddenInput(containerEl, hiddenInputEl) {
+            const selectedItems = Array.from(containerEl.querySelectorAll('.selected-item')).map(el => el.textContent.replace('×', '').trim().toLowerCase());
+            hiddenInputEl.value = selectedItems.join(',');
+        }
+        
+        // Setup the multi-select for cuisine and dietary
+        setupMultiSelect(cuisineInput, cuisineHiddenInput, selectedCuisinesContainer, cuisineOptions);
+        setupMultiSelect(dietaryInput, dietaryHiddenInput, selectedDietaryContainer, dietaryOptions);
+
+        // Form submission logic
         const recipeForm = document.getElementById('recipe-form');
         recipeForm.addEventListener('submit', function(e) {
+            console.log('submit called');
             e.preventDefault();
             const data = {
                 ingredients: document.getElementById('ingredients').value,
@@ -1001,6 +1124,7 @@
                 dietary: document.getElementById('dietary').value,
                 allergies: document.getElementById('allergies').value
             };
+            console.log(data);
             console.log('Recipe Generation Request:', data);
             alert('Recipe generated successfully! Check the console for details.');
         });
@@ -1027,6 +1151,5 @@
         checkAuthState();
     });
     </script>
-
 </body>
 </html>
