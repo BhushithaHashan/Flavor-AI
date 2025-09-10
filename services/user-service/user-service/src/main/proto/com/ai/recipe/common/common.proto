@@ -1,10 +1,10 @@
+
 syntax = "proto3";
 
 package com.ai.recipe.common;
 
 option java_package = "com.ai.recipe.common.proto";
 option java_multiple_files = true;
-
 
 message UserProfile {
   string id = 1;

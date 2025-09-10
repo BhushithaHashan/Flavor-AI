@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package com.ai.recipe.user;
 
-import "common.proto";
+import "com/ai/recipe/common/common.proto";
 
 option java_package = "com.ai.recipe.user_service.proto"; 
 option java_multiple_files = true;
@@ -12,7 +12,7 @@ service UserService {
 }
 
 message CreateProfileRequest {
-  com.ai.recipe.common.UserProfile profile = 1; // id + email only
+  com.ai.recipe.common.UserProfile profile = 1;
 }
 
 message CreateProfileResponse {
