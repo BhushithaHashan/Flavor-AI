@@ -22,7 +22,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // disable CSRF for JWT stateless APIs
             .cors(cors -> {})             // enable CORS using CorsConfigurationSource bean
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/recipe/freeuser").permitAll()
+                .requestMatchers("/api/recipe/test").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
