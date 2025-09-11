@@ -51,12 +51,39 @@ public class RecipeService {
     private String buildPrompt(List<String> ingredients, List<String> cuisine,
                                String mealType, List<String> dietary, List<String> allergies) {
         return String.format(
-                "Generate a %s recipe using ingredients %s for %s cuisine. Consider dietary restrictions: %s. Avoid: %s.",
+                "Generate an extremely detailed, step-by-step recipe for a '%s' meal of '%s' cuisine.If there are clashing items like vegan and ingrediant having meat mention them breifly in the begenning in a funny friendly way " +
+                "The entire response must be a single string formatted for easy breakdown into multiple pages. " +
+                "Do not include any other text or formatting besides what is specified below.\n" +
+                "\n" +
+                "Page 1: INGREDIENTS\n" +
+                "List all ingredients with their exact portions and measurements in a numbered or bulleted list. Also, include a brief introduction to the recipe.And try best to use the ingrediant on the user provided .\n" +
+                "\n" +
+                "---PAGE-BREAK---\n" +
+                "Page 2: PREPARATION\n" +
+                "Provide a highly detailed, numbered list of preparation steps. The instructions must be very specific and thorough.\n" +
+                "\n" +
+                "---PAGE-BREAK---\n" +
+                "Page 3: COOKING INSTRUCTIONS\n" +
+                "Provide a numbered list of detailed cooking steps, including specific temperatures, times, and visual cues. Be sure to describe what the food should look and feel like at each stage.\n" +
+                "\n" +
+                "---PAGE-BREAK---\n" +
+                "Page 4: FINALIZING & SERVING\n" +
+                "Provide a detailed, numbered list of steps for plating and serving the dish, including any garnishes or final touches.\n" +
+                "\n" +
+                "---PAGE-BREAK---\n" +
+                "Page 5: TIPS & VARIATIONS\n" +
+                "Provide a final page with useful tips, common mistakes to avoid, and suggestions for variations on the recipe.\n" +
+                "\n" +
+                "Recipe details:\n" +
+                "- Required ingredients: %s\n" +
+                "- Dietary restrictions: %s\n" +
+                "- Allergies to avoid: %s\n" ,
                 mealType,
+                String.join(" and ", cuisine),
                 String.join(", ", ingredients),
-                String.join(", ", cuisine),
                 String.join(", ", dietary),
                 String.join(", ", allergies)
+                
         );
     }
 
