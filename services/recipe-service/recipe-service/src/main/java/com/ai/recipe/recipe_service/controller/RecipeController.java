@@ -22,7 +22,7 @@ public class RecipeController {
     @PostMapping("/freeuser")
     public ResponseEntity<RecipeResponse> generateFreeRecipe(@RequestBody RecipeRequest request) {
         System.out.println("recipe service /freeuser end point is hit");
-        RecipeResponse response = recipeService.generateRecipe(request, null);
+        RecipeResponse response = recipeService.generateRecipe(request);
         return ResponseEntity.ok(response); // 200 OK
     }
 
@@ -32,12 +32,12 @@ public class RecipeController {
                                                          Authentication authentication) {
         System.out.println("recipe service /paid user end point is hit");
         Long userId = (Long) authentication.getPrincipal(); // from JwtAuthenticationFilter
-        RecipeResponse response = recipeService.generateRecipe(request, userId);
+        RecipeResponse response = recipeService.generateRecipe(request);
         return ResponseEntity.ok(response); // 200 OK
     }
 
     // Test endpoint
-    @PostMapping("/test")
+    @GetMapping("/test")
     public ResponseEntity<String> testEndpoint() {
         System.out.println("recipe service is hit");
         return ResponseEntity.status(HttpStatus.OK).body("Recipe service is working!");

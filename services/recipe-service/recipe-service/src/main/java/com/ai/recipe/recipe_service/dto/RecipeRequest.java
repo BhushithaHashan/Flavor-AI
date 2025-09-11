@@ -32,6 +32,9 @@ public class RecipeRequest {
     public List<String> getAllergiesList() {
         return List.of(allergies.split("\\s*,\\s*"));
     }
-
+    
+    public String  getMealType(){
+        return mealType;
+    }
     // getters & setters
 }

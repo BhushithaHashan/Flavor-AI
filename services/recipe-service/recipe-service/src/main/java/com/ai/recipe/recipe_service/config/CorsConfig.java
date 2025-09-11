@@ -16,7 +16,12 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         
         // Allow only your frontends (React, Angular, etc.)
-        configuration.setAllowedOrigins(List.of("http://localhost:*", "https://yourdomain.com"));
+        configuration.setAllowedOriginPatterns(List.of(
+            "http://localhost:*",   // for local frontend
+            "http://nginx",         // if nginx container hostname
+            "http://yourdomain.com" // production
+        ));
+
         
         // Allow headers
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));

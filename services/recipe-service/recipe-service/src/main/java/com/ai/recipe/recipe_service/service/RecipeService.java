@@ -22,9 +22,13 @@ public class RecipeService {
     private String geminiapikey;
     @Value("${spring.ai.openai.chat.options.model}")
     private String model;
-    private Client client = Client.builder().apiKey(geminiapikey).build();
-    private GenerateContentResponse response;
-    
+    private Client client;
+    private GenerateContentResponse geminiresponse;
+    public RecipeService(@Value("${spring.ai.openai.api-key}") String apiKey,@Value("${spring.ai.openai.chat.options.model}")String model){
+        this.geminiapikey = apiKey;
+        this.model = model;
+        this.client =  Client.builder().apiKey(geminiapikey).build();
+    }
     public RecipeResponse generateRecipe(RecipeRequest request) {
         
         List<String> ingredients = request.getIngredientsList();
@@ -39,12 +43,8 @@ public class RecipeService {
         String aiGeneratedRecipe = callGeminiApi(prompt);
 
         // Step 4: Build RecipeResponse DTO
-        return new RecipeResponse(
-                aiGeneratedRecipe.split("\n")[0], // first line = title
-                aiGeneratedRecipe,               // full AI description
-                ingredients,
-                List.of("Step 1: ...", "Step 2: ...") // placeholder steps, replace with AI parsing if needed
-        );
+        return new RecipeResponse(aiGeneratedRecipe);
+        
     }
 
     // -------------------- Helpers -------------------//
@@ -61,14 +61,14 @@ public class RecipeService {
     }
 
     private String callGeminiApi(String prompt) {
-        response =
+        geminiresponse =
         client.models.generateContent(
             model,
             prompt,
             null);
 
-        System.out.println(response.text());
-        return response.text();
+        System.out.println(geminiresponse.text());
+        return geminiresponse.text();
     }
 }
 

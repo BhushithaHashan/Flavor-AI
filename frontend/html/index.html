@@ -1113,10 +1113,11 @@
         setupMultiSelect(dietaryInput, dietaryHiddenInput, selectedDietaryContainer, dietaryOptions);
 
         // Form submission logic
+
         const recipeForm = document.getElementById('recipe-form');
-        recipeForm.addEventListener('submit', function(e) {
-            console.log('submit called');
+        recipeForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+
             const data = {
                 ingredients: document.getElementById('ingredients').value,
                 cuisine: document.getElementById('cuisine').value,
@@ -1124,10 +1125,30 @@
                 dietary: document.getElementById('dietary').value,
                 allergies: document.getElementById('allergies').value
             };
-            console.log(data);
-            console.log('Recipe Generation Request:', data);
-            alert('Recipe generated successfully! Check the console for details.');
+
+            const token = localStorage.getItem('jwtToken');
+            const url = token ? 'http://localhost:8080/api/recipe/paiduser' : 'http://localhost:8080/api/recipe/freeuser';
+
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token && { 'Authorization': `Bearer ${token}` })
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const responseData = await res.json();
+                console.log('Recipe Response:', responseData);
+                alert('Recipe generated successfully! Check the console for details.');
+            } catch (err) {
+                console.error('Recipe generation failed:', err);
+                alert('Failed to generate recipe. Please try again.');
+            }
         });
+
 
         // ------------------ HERO BUTTONS SCROLL ------------------
         const getStartedBtn = document.getElementById('get-started-btn');

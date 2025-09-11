@@ -1,4 +1,4 @@
-package com.ai.recipe.user_service.security;
+package com.ai.recipe.recipe_service.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
