@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.replace("Bearer ", "");
-            System.out.println("**##yoooooo token recieved from authfilter heres the token :"+token);
+            System.out.println("**##yoooooo token recieved from authfilter heres the token from recipe service:"+token);
 
             if (jwtUtil.validateToken(token)) {
                 // Extract userId from token
