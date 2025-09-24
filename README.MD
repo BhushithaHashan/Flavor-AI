@@ -11,8 +11,16 @@ It leverages AI models to suggest creative and healthy recipes, providing a seam
 
 ## 📸 Screenshots
 
-screenshots are in screenshot page
+Arch
 
+![Architecture ](screenshots/diagram-export-9-24-2025-6_07_55-AM.png)
+
+Here are some screenshots of the project:
+
+![login ](screenshots/Screenshot%20from%202025-09-24%2005-11-43.png)
+![dash ](screenshots/Screenshot%20from%202025-09-24%2005-12-26.png)
+![generating form ](screenshots/Screenshot%20from%202025-09-24%2005-12-41.png)
+![response ](screenshots/Screenshot%20from%202025-09-24%2005-28-50.png)
 ---
 
 ## ⚙️ Setup Instructions
@@ -61,6 +69,6 @@ cd Flavor-AI
 
 ## 🎥 Demo Video
 
-👉 [YouTube Demo Video – Flavor-AI](https://youtube.com/flovorlink)
+👉 [YouTube Demo Video – Flavor-AI](https://youtu.be/D_z2Si5npkY?si=UmmI9IweTpOGiuB3)
 ---
 
